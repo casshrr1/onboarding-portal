@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en" data-lang="en">
+<!--
+  =========================================================================
+  PwC Advisory (Eurasia) — New Joiner Portal — single self-contained file.
+  HOW TO EXTEND THIS FILE:
+  1) To add a page: copy a <section class="page" ...> block (with its two
+     .lang en / .lang ru inner blocks), give it a unique id, set data-nav /
+     data-nav-ru (menu label) and data-group / data-group-ru (menu section;
+     leave empty "" for a top-level item like Welcome / FAQ). Order in the
+     file = order in the menu and in Back/Next.
+  2) Menu, search index and Back/Next pagination are ALL built automatically
+     from the <section class="page"> elements found in the DOM — no manual
+     wiring needed.
+  3) Images live once each in the JS object A{ key: "data:image/...;base64,.."}
+     at the top of the script, referenced in markup as <img data-img="key">.
+     Replace placeholder generator calls with real base64 strings there.
+  =========================================================================
+-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PwC Advisory Eurasia — New Joiner Guide / Гид нового сотрудника</title>
+<style>
+:root{
+  --orange:#D04A02; --orange2:#EB8C00; --pink:#DB536A; --red:#E0301E; --yellow:#FFB600;
+  --text:#2D2D2D; --black:#000; --grey1:#7D7D7D; --grey2:#464646; --line:#DEDEDE;
+  --bg:#F7F5F3; --bg2:#FBF3EE; --white:#fff;
+  --fs-h1:34px; --fs-h2:23px; --fs-h3:17px; --fs-name:16px; --fs-body:15px; --fs-sm:12px; --fs-num:30px;
+  --serif:Georgia,'Times New Roman',serif;
+  --sans:Arial,Helvetica,sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:var(--fs-body);line-height:1.55;}
+html[data-lang="en"] .lang.ru{display:none !important;}
+html[data-lang="ru"] .lang.en{display:none !important;}
+h1,h2,h3{font-family:var(--serif);font-weight:normal;color:var(--black);margin:0 0 8px;}
+h1{font-size:var(--fs-h1);}
+h2{font-size:var(--fs-h2);}
+h3{font-size:var(--fs-h3);}
+p{margin:0 0 12px;}
+a{color:var(--orange);text-decoration:none;}
+a:hover{text-decoration:underline;}
+.kicker{font-size:var(--fs-sm);letter-spacing:.08em;text-transform:uppercase;color:var(--grey1);font-weight:bold;margin-bottom:6px;display:block;}
+.rule{height:2px;background:var(--orange);width:56px;margin:10px 0 22px;border:0;}
+.rule-full{height:1px;background:var(--line);border:0;margin:24px 0;}
+
+/* ---------- layout ---------- */
+.app{display:flex;min-height:100vh;}
+.sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:290px;background:var(--white);
+  border-right:1px solid var(--line);padding:26px 20px;overflow-y:auto;z-index:50;
+}
+.logo{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.logo .wordmark{font-family:var(--serif);font-size:26px;color:var(--black);letter-spacing:-1px;}
+.logo .stroke{width:26px;height:6px;background:linear-gradient(90deg,var(--yellow),var(--orange),var(--red));border-radius:2px;}
+.logo-caption{font-size:var(--fs-sm);color:var(--grey1);margin:0 0 22px;}
+.lang-switch{display:flex;border:1px solid var(--line);margin-bottom:24px;}
+.lang-switch button{flex:1;background:var(--white);border:0;padding:8px 0;font-family:var(--sans);font-size:var(--fs-sm);font-weight:bold;letter-spacing:.05em;color:var(--grey2);cursor:pointer;}
+.lang-switch button.active{background:var(--orange);color:var(--white);}
+nav.menu{font-size:var(--fs-body);}
+.menu-group-title{font-size:var(--fs-sm);text-transform:uppercase;letter-spacing:.06em;color:var(--grey1);font-weight:bold;margin:20px 0 6px;}
+.menu-group-title:first-child{margin-top:0;}
+.menu-item{
+  display:block;padding:8px 10px 8px 12px;border-left:3px solid transparent;color:var(--grey2);
+  cursor:pointer;font-size:var(--fs-body);line-height:1.3;
+}
+.menu-item:hover{background:var(--bg2);color:var(--orange);}
+.menu-item.active{border-left-color:var(--orange);color:var(--orange);font-weight:bold;background:var(--bg2);}
+.menu-item.top{font-weight:bold;color:var(--black);}
+.menu-item.top.active{color:var(--orange);}
+
+.main{margin-left:290px;flex:1;min-width:0;}
+.searchbar{
+  position:sticky;top:0;z-index:40;background:var(--white);border-bottom:1px solid var(--line);
+  padding:14px 40px;display:flex;justify-content:center;
+}
+.search-wrap{position:relative;width:100%;max-width:1000px;}
+.search-wrap input{
+  width:100%;padding:11px 14px;border:1px solid var(--line);font-family:var(--sans);font-size:var(--fs-body);
+  color:var(--text);background:var(--bg);
+}
+.search-wrap input:focus{outline:2px solid var(--orange);}
+.search-results{
+  position:absolute;left:0;right:0;top:calc(100% + 4px);background:var(--white);
+  border:1px solid var(--line);box-shadow:0 8px 20px rgba(0,0,0,.08);max-height:420px;overflow-y:auto;z-index:60;display:none;
+}
+.search-results.show{display:block;}
+.search-result-item{padding:10px 14px;border-bottom:1px solid var(--line);cursor:pointer;}
+.search-result-item:hover{background:var(--bg2);}
+.search-result-item .meta{font-size:var(--fs-sm);color:var(--grey1);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px;}
+.search-result-item .snippet{font-size:var(--fs-body);color:var(--text);}
+.search-result-item mark, mark.hit{background:var(--yellow);color:var(--black);padding:0 1px;}
+.search-empty{padding:14px;color:var(--grey1);font-size:var(--fs-body);}
+
+.content{max-width:1000px;margin:0 auto;padding:36px 40px 60px;}
+.page{display:none;animation:fadeIn .25s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+.hero{
+  position:relative;color:var(--white);padding:56px 44px;margin-bottom:30px;overflow:hidden;
+  background:linear-gradient(120deg,var(--orange) 0%,var(--orange2) 55%,var(--yellow) 100%);
+}
+.hero::after{content:"";position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;background:rgba(255,255,255,.12);}
+.hero h1{color:var(--white);}
+.hero p{color:rgba(255,255,255,.92);max-width:620px;font-size:var(--fs-h3);}
+.hero .kicker{color:rgba(255,255,255,.85);}
+
+.grid{display:grid;gap:20px;}
+.c2{grid-template-columns:repeat(2,1fr);}
+.c3{grid-template-columns:repeat(3,1fr);}
+.c4{grid-template-columns:repeat(4,1fr);}
+@media(max-width:800px){.c2,.c3,.c4{grid-template-columns:1fr 1fr;}}
+@media(max-width:560px){.c2,.c3,.c4{grid-template-columns:1fr;}}
+
+.card{background:var(--white);border:1px solid var(--line);padding:22px;position:relative;}
+.card.stripe::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--orange);}
+.card.stripe.pink::before{background:var(--pink);}
+.card.stripe.yellow::before{background:var(--yellow);}
+.card.stripe.red::before{background:var(--red);}
+.card h3{margin-bottom:8px;}
+.card .card-icon{font-size:22px;margin-bottom:10px;}
+
+.stat{text-align:left;padding:18px 20px;border-left:3px solid var(--orange);background:var(--white);}
+.stat .num{font-family:var(--sans);font-size:var(--fs-num);color:var(--orange);font-weight:bold;line-height:1;}
+.stat .label{font-size:var(--fs-sm);color:var(--grey1);text-transform:uppercase;letter-spacing:.04em;margin-top:6px;}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;}
+.chip{font-size:var(--fs-sm);padding:6px 12px;border:1px solid var(--orange);color:var(--orange);background:var(--bg2);text-transform:uppercase;letter-spacing:.03em;}
+.chip.neutral{border-color:var(--line);color:var(--grey1);background:var(--white);}
+
+.tabs{margin:14px 0;}
+.tab-btns{display:flex;flex-wrap:wrap;border-bottom:2px solid var(--line);}
+.tab-btn{background:none;border:0;padding:10px 16px;font-family:var(--sans);font-size:var(--fs-body);color:var(--grey2);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;}
+.tab-btn.active{color:var(--orange);border-bottom-color:var(--orange);font-weight:bold;}
+.tab-panel{display:none;padding:18px 0;}
+.tab-panel.active{display:block;}
+
+.accordion-item{border-bottom:1px solid var(--line);}
+.accordion-head{display:flex;justify-content:space-between;align-items:center;padding:14px 4px;cursor:pointer;}
+.accordion-head h3{margin:0;font-size:var(--fs-h3);}
+.accordion-toggle{font-size:20px;color:var(--orange);width:22px;text-align:center;flex:none;}
+.accordion-body{display:none;padding:0 4px 16px;color:var(--grey2);}
+.accordion-item.open .accordion-body{display:block;}
+.accordion-item.open .accordion-toggle{transform:rotate(45deg);}
+
+.steps{list-style:none;margin:14px 0;padding:0;counter-reset:step;}
+.steps li{counter-increment:step;position:relative;padding:6px 0 6px 40px;margin-bottom:6px;}
+.steps li::before{content:counter(step);position:absolute;left:0;top:4px;width:26px;height:26px;border-radius:50%;background:var(--orange);color:var(--white);font-size:var(--fs-sm);font-weight:bold;display:flex;align-items:center;justify-content:center;}
+
+.doDont{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:14px 0;}
+@media(max-width:600px){.doDont{grid-template-columns:1fr;}}
+.doBox,.dontBox{padding:16px 18px;border-left:4px solid;}
+.doBox{border-color:#2E7D32;background:#F1F8F1;}
+.dontBox{border-color:var(--red);background:#FDF0EE;}
+.doBox h4,.dontBox h4{margin:0 0 8px;font-family:var(--sans);font-size:var(--fs-body);font-weight:bold;}
+.doBox h4{color:#2E7D32;}
+.dontBox h4{color:var(--red);}
+.doBox ul,.dontBox ul{margin:0;padding-left:18px;}
+
+ul.clean{list-style:none;padding:0;margin:12px 0;}
+ul.clean li{position:relative;padding-left:20px;margin-bottom:8px;}
+ul.clean li::before{content:"";position:absolute;left:0;top:8px;width:7px;height:7px;background:var(--orange);}
+
+.callout{border-left:4px solid var(--orange);background:var(--bg2);padding:14px 18px;margin:16px 0;}
+.callout.warn{border-left-color:var(--red);background:#FDF0EE;}
+.callout strong{display:block;margin-bottom:4px;color:var(--black);}
+
+.contact-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:14px 0;}
+@media(max-width:600px){.contact-grid{grid-template-columns:1fr;}}
+.contact-card{border:1px solid var(--line);padding:14px 16px;background:var(--white);}
+.contact-card .name{font-family:var(--serif);font-size:var(--fs-name);margin-bottom:2px;}
+.contact-card .role{font-size:var(--fs-sm);color:var(--grey1);margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em;}
+.contact-card a{font-size:var(--fs-body);}
+
+.people-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 18px;margin:16px 0;}
+@media(max-width:800px){.people-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:560px){.people-grid{grid-template-columns:repeat(2,1fr);}}
+.person{text-align:left;}
+.person img{width:100%;aspect-ratio:3/4;object-fit:cover;object-position:center top;background:var(--bg2);display:block;border:1px solid var(--line);}
+.person .tag{font-size:var(--fs-sm);color:var(--orange);text-transform:uppercase;letter-spacing:.03em;margin-top:14px;font-weight:bold;}
+.person .pname{font-family:var(--serif);font-size:var(--fs-name);margin-top:4px;}
+.person .prole{font-size:var(--fs-sm);color:var(--grey1);margin-top:2px;}
+
+.figures-row{display:flex;gap:18px;flex-wrap:wrap;margin:16px 0;}
+.figure-card{width:120px;text-align:center;}
+.figure-card img{width:100%;height:150px;object-fit:contain;background:var(--bg2);border:1px solid var(--line);}
+.figure-card .cap{font-size:var(--fs-sm);color:var(--grey2);margin-top:8px;}
+
+.pagenav{display:flex;justify-content:space-between;margin-top:50px;border-top:1px solid var(--line);padding-top:24px;gap:12px;}
+.pagenav a{
+  flex:1;max-width:46%;border:1px solid var(--orange);color:var(--orange);padding:12px 16px;font-size:var(--fs-body);
+  cursor:pointer;text-decoration:none;
+}
+.pagenav a:hover{background:var(--orange);color:var(--white);}
+.pagenav a.next{text-align:right;margin-left:auto;}
+.pagenav .arrow{font-size:var(--fs-sm);display:block;color:var(--grey1);text-transform:uppercase;letter-spacing:.04em;}
+.pagenav a:hover .arrow{color:rgba(255,255,255,.85);}
+
+.hamburger{display:none;position:fixed;top:14px;left:14px;z-index:70;background:var(--orange);color:var(--white);border:0;width:40px;height:40px;font-size:18px;cursor:pointer;}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:45;}
+
+footer.pagefoot{font-size:var(--fs-sm);color:var(--grey1);margin-top:30px;}
+
+@media(max-width:900px){
+  .sidebar{transform:translateX(-100%);transition:transform .25s ease;box-shadow:0 0 30px rgba(0,0,0,.2);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .hamburger{display:block;}
+  .overlay.show{display:block;}
+  .content{padding:24px 18px 50px;}
+  .searchbar{padding:12px 18px;}
+  .hero{padding:36px 22px;}
+}
+</style>
+</head>
+<body>
+
+<button class="hamburger" id="hamburger">☰</button>
+<div class="overlay" id="overlay"></div>
+
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="logo"><span class="wordmark">pwc</span><span class="stroke"></span></div>
+    <p class="logo-caption lang en">Advisory Eurasia — New Joiner Guide</p>
+    <p class="logo-caption lang ru">Advisory Eurasia — Гид нового сотрудника</p>
+    <div class="lang-switch">
+      <button id="btnEN" class="active">EN</button>
+      <button id="btnRU">RU</button>
+    </div>
+    <nav class="menu" id="menu"></nav>
+  </aside>
+
+  <div class="main">
+    <div class="searchbar">
+      <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="Search the guide…" />
+        <div class="search-results" id="searchResults"></div>
+      </div>
+    </div>
+
+    <div class="content" id="content">
+
+      <!-- =================== WELCOME =================== -->
+      <section class="page" id="welcome" data-group="" data-group-ru="" data-nav="Welcome" data-nav-ru="Добро пожаловать">
+        <div class="lang en">
+          <div class="hero">
+            <span class="kicker">PwC Advisory — Eurasia</span>
+            <h1>Welcome to the team</h1>
+            <p>We're genuinely glad you're here. Advisory Eurasia is a fast-growing, technology-driven consulting business spanning eight countries — and from day one, you're part of it. This guide is your practical companion for your first weeks: how things work, who to ask, and where to find support.</p>
+          </div>
+          <p>Take your time to explore each section on the left. Nothing here is meant to be memorised in one sitting — bookmark this page and come back whenever you need an answer. If you can't find something, ask your Team Leader or Buddy: nobody expects you to know it all on day one.</p>
+          <h2>Where to start</h2><hr class="rule">
+          <div class="grid c3">
+            <div class="card stripe"><div class="card-icon">🧭</div><h3>Who we are</h3><p>Meet Advisory Eurasia: our region, our services and our people.</p></div>
+            <div class="card stripe pink"><div class="card-icon">🗂️</div><h3>Admin essentials</h3><p>Time recording, travel, leave and dress code — the practical basics.</p></div>
+            <div class="card stripe yellow"><div class="card-icon">💛</div><h3>Wellbeing</h3><p>How we support your energy, health and work-life balance.</p></div>
+          </div>
+        </div>
+        <div class="lang ru">
+          <div class="hero">
+            <span class="kicker">PwC Advisory — Eurasia</span>
+            <h1>Добро пожаловать в команду</h1>
+            <p>Мы искренне рады, что вы с нами. Advisory Eurasia — быстрорастущий консалтинговый бизнес с технологическим фокусом, представленный в восьми странах, и с первого дня вы — часть этой команды. Этот гид — ваш практический помощник на первые недели: как всё устроено, к кому обращаться и где искать поддержку.</p>
+          </div>
+          <p>Не торопитесь изучить все разделы слева сразу. Ничего здесь не нужно запоминать за один раз — сохраните эту страницу и возвращайтесь к ней при необходимости. Если что-то не находите — спросите руководителя или бадди: от вас никто не ждёт, что вы будете знать всё с первого дня.</p>
+          <h2>С чего начать</h2><hr class="rule">
+          <div class="grid c3">
+            <div class="card stripe"><div class="card-icon">🧭</div><h3>Кто мы</h3><p>Знакомство с Advisory Eurasia: регион, услуги и люди.</p></div>
+            <div class="card stripe pink"><div class="card-icon">🗂️</div><h3>Основы работы</h3><p>Учёт времени, командировки, отпуска и дресс-код — практическая база.</p></div>
+            <div class="card stripe yellow"><div class="card-icon">💛</div><h3>Благополучие</h3><p>Как мы поддерживаем вашу энергию, здоровье и баланс работы и жизни.</p></div>
+          </div>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+      <!-- =================== PURPOSE =================== -->
+      <section class="page" id="purpose" data-group="What makes us" data-group-ru="Что нас отличает" data-nav="Our purpose" data-nav-ru="Наша миссия">
+        <div class="lang en">
+          <span class="kicker">What makes us</span>
+          <h1>Our purpose</h1><hr class="rule">
+          <div class="callout"><strong>To build trust in society and solve important problems.</strong>
+          This is the single sentence that guides everything we do at PwC — from the smallest task to the largest engagement.</div>
+          <p>Our purpose is more than a slogan. It shapes how we work with clients, how we work with each other, and the standard we hold ourselves to. Clients trust us with sensitive information and complex decisions; society trusts that our profession safeguards financial and non-financial reporting; and colleagues trust each other to deliver quality work, honestly and on time.</p>
+          <p>As a new joiner, you contribute to this purpose from your very first task — every piece of analysis, every client interaction and every internal report is an opportunity to build trust.</p>
+        </div>
+        <div class="lang ru">
+          <span class="kicker">Что нас отличает</span>
+          <h1>Наша миссия</h1><hr class="rule">
+          <div class="callout"><strong>Укреплять доверие в обществе и решать значимые проблемы.</strong>
+          Именно эта фраза определяет всё, что мы делаем в PwC — от самой небольшой задачи до крупнейшего проекта.</div>
+          <p>Наша миссия — больше, чем лозунг. Она определяет то, как мы работаем с клиентами, как мы работаем друг с другом, и стандарт, которому мы следуем. Клиенты доверяют нам конфиденциальную информацию и сложные решения; общество доверяет тому, что наша профессия защищает достоверность финансовой и нефинансовой отчётности; а коллеги доверяют друг другу в качественной и своевременной работе.</p>
+          <p>Как новый сотрудник, вы вносите вклад в эту миссию с самой первой задачи — каждый анализ, каждое взаимодействие с клиентом и каждый внутренний отчёт — это возможность укрепить доверие.</p>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+      <!-- =================== VALUES =================== -->
+      <section class="page" id="values" data-group="What makes us" data-group-ru="Что нас отличает" data-nav="Our values" data-nav-ru="Наши ценности">
+        <div class="lang en">
+          <span class="kicker">What makes us</span>
+          <h1>Our values</h1><hr class="rule">
+          <p>Five values guide how every one of us behaves and makes decisions, every day.</p>
+          <div class="grid c2">
+            <div class="card stripe"><h3>Act with integrity</h3><p>We speak up for what is right, especially when it's difficult. We are honest and consistent in what we say and do.</p></div>
+            <div class="card stripe pink"><h3>Make a difference</h3><p>We make a real difference to our clients, colleagues, and communities by using and sharing our skills and knowledge.</p></div>
+            <div class="card stripe yellow"><h3>Care</h3><p>We care about every person, and treat them as we would like to be treated ourselves.</p></div>
+            <div class="card stripe red"><h3>Work together</h3><p>We collaborate and build strong relationships across teams, clients and communities.</p></div>
+            <div class="card stripe"><h3>Reimagine the possible</h3><p>We innovate and create solutions to the most important challenges, and dare to think differently.</p></div>
+          </div>
+        </div>
+        <div class="lang ru">
+          <span class="kicker">Что нас отличает</span>
+          <h1>Наши ценности</h1><hr class="rule">
+          <p>Пять ценностей определяют, как каждый из нас действует и принимает решения каждый день.</p>
+          <div class="grid c2">
+            <div class="card stripe"><h3>Действовать честно</h3><p>Мы говорим о том, что правильно, особенно когда это сложно. Мы честны и последовательны в словах и поступках.</p></div>
+            <div class="card stripe pink"><h3>Приносить пользу</h3><p>Мы создаём реальную ценность для клиентов, коллег и сообществ, применяя и передавая свои знания и навыки.</p></div>
+            <div class="card stripe yellow"><h3>Заботиться</h3><p>Мы заботимся о каждом человеке и относимся к нему так, как хотели бы, чтобы относились к нам.</p></div>
+            <div class="card stripe red"><h3>Работать вместе</h3><p>Мы сотрудничаем и выстраиваем прочные отношения между командами, клиентами и сообществами.</p></div>
+            <div class="card stripe"><h3>Переосмысливать возможное</h3><p>Мы создаём инновационные решения для самых важных задач и не боимся мыслить иначе.</p></div>
+          </div>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+      <!-- =================== BRAND =================== -->
+      <section class="page" id="brand" data-group="What makes us" data-group-ru="Что нас отличает" data-nav="Our brand" data-nav-ru="Наш бренд">
+        <div class="lang en">
+          <span class="kicker">What makes us</span>
+          <h1>Our brand</h1><hr class="rule">
+          <p>Our global strategy, <em>The New Equation</em>, reflects how the world's biggest challenges — from technological disruption to the drive for sustainability — are converging. Clients need integrated solutions that combine trust and technology, delivered by multidisciplinary teams.</p>
+          <div class="grid c3">
+            <div class="card"><h3>Wordmark</h3><p>The "pwc" logo is always written in lowercase, with a small gradient stroke (yellow → orange → red) that represents momentum and energy.</p></div>
+            <div class="card"><h3>Colour</h3><p>Orange (#D04A02) is our core accent, supported by warm secondary tones — amber, pink and red. Colour is used sparingly, as an accent rather than decoration.</p></div>
+            <div class="card"><h3>Typography</h3><p>Georgia for headings and names; Arial for all other text. Clean, left-aligned layouts with generous white space and thin divider lines.</p></div>
+          </div>
+          <p>These same principles — clean lines, restrained colour, professional tone — also inform our <a data-goto="dresscode">dress code</a>: the way we present ourselves is part of our brand, too.</p>
+        </div>
+        <div class="lang ru">
+          <span class="kicker">Что нас отличает</span>
+          <h1>Наш бренд</h1><hr class="rule">
+          <p>Наша глобальная стратегия <em>The New Equation</em> отражает то, как сходятся крупнейшие вызовы современности — от технологических изменений до устойчивого развития. Клиентам нужны интегрированные решения, объединяющие доверие и технологии, которые предоставляют мультидисциплинарные команды.</p>
+          <div class="grid c3">
+            <div class="card"><h3>Логотип</h3><p>Логотип «pwc» всегда пишется строчными буквами, с небольшим градиентным штрихом (жёлтый → оранжевый → красный), символизирующим движение и энергию.</p></div>
+            <div class="card"><h3>Цвет</h3><p>Оранжевый (#D04A02) — наш основной акцент, дополняемый тёплыми вторичными оттенками: янтарным, розовым и красным. Цвет используется точечно, как акцент, а не украшение.</p></div>
+            <div class="card"><h3>Типографика</h3><p>Georgia — для заголовков и имён; Arial — для остального текста. Чистая вёрстка по левому краю, много «воздуха» и тонкие разделительные линии.</p></div>
+          </div>
+          <p>Те же принципы — чистые линии, сдержанный цвет, деловой тон — определяют и наш <a data-goto="dresscode">дресс-код</a>: то, как мы выглядим, — тоже часть нашего бренда.</p>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+      <!-- =================== REGION =================== -->
+      <section class="page" id="region" data-group="Who we are" data-group-ru="Кто мы" data-nav="Region" data-nav-ru="Регион">
+        <div class="lang en">
+          <span class="kicker">Who we are</span>
+          <h1>Region</h1><hr class="rule">
+          <p><strong>One Advisory — One Eurasia.</strong> Our ambition is to become the #1 technology-driven consulting business in Eurasia.</p>
+          <div class="grid c4">
+            <div class="stat"><div class="num">181</div><div class="label">Advisory specialists</div></div>
+            <div class="stat"><div class="num">8</div><div class="label">Countries covered</div></div>
+            <div class="stat"><div class="num">#1</div><div class="label">Ambition in Eurasia</div></div>
+            <div class="stat"><div class="num">7</div><div class="label">Priority industries</div></div>
+          </div>
+          <h2 style="margin-top:30px;">Our footprint</h2><hr class="rule">
+          <img data-img="map" alt="Eurasia region map" style="width:100%;border:1px solid var(--line);margin-bottom:14px;">
+          <p class="kicker">Countries with Advisory teams on the ground</p>
+          <div class="chips">
+            <span class="chip">Kazakhstan</span><span class="chip">Uzbekistan</span><span class="chip">Azerbaijan</span>
+            <span class="chip">Georgia</span><span class="chip">Mongolia</span><span class="chip">Armenia</span>
+            <span class="chip neutral">Turkmenistan</span><span class="chip neutral">Kyrgyzstan</span>
+          </div>
+          <p style="font-size:var(--fs-sm);color:var(--grey1);">Turkmenistan and Kyrgyzstan are covered from neighbouring offices.</p>
+        </div>
+        <div class="lang ru">
+          <span class="kicker">Кто мы</span>
+          <h1>Регион</h1><hr class="rule">
+          <p><strong>One Advisory — One Eurasia.</strong> Наша амбиция — стать консалтинговым бизнесом №1 в Евразии с фокусом на технологиях.</p>
+          <div class="grid c4">
+            <div class="stat"><div class="num">181</div><div class="label">специалист Advisory</div></div>
+            <div class="stat"><div class="num">8</div><div class="label">стран присутствия</div></div>
+            <div class="stat"><div class="num">#1</div><div class="label">амбиция в Евразии</div></div>
+            <div class="stat"><div class="num">7</div><div class="label">приоритетных индустрий</div></div>
+          </div>
+          <h2 style="margin-top:30px;">Наше присутствие</h2><hr class="rule">
+          <img data-img="map" alt="Карта региона Евразия" style="width:100%;border:1px solid var(--line);margin-bottom:14px;">
+          <p class="kicker">Страны, где присутствуют команды Advisory</p>
+          <div class="chips">
+            <span class="chip">Казахстан</span><span class="chip">Узбекистан</span><span class="chip">Азербайджан</span>
+            <span class="chip">Грузия</span><span class="chip">Монголия</span><span class="chip">Армения</span>
+            <span class="chip neutral">Туркменистан</span><span class="chip neutral">Кыргызстан</span>
+          </div>
+          <p style="font-size:var(--fs-sm);color:var(--grey1);">Туркменистан и Кыргызстан обслуживаются из соседних офисов.</p>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+      <!-- =================== SERVICES =================== -->
+      <section class="page" id="services" data-group="Who we are" data-group-ru="Кто мы" data-nav="Services" data-nav-ru="Услуги">
+        <div class="lang en">
+          <span class="kicker">Who we are</span>
+          <h1>Services</h1><hr class="rule">
+          <p>Advisory Eurasia is organised into two pillars:</p>
+          <div class="grid c2">
+            <div class="card stripe"><h3>Deals</h3><p>Transaction Services (TS) · Corporate Finance (CF) · Forensic · Valuation · Capital Projects &amp; Infrastructure (CP&amp;I)</p></div>
+            <div class="card stripe pink"><h3>Consulting</h3><p>Strategy&amp; · Finance Transformation · ESG · Multi-industry &amp; Operations · Technology · Data &amp; Analytics (D&amp;A) · SAP ERP</p></div>
+          </div>
+          <h2 style="margin-top:30px;">What we do — capabilities</h2><hr class="rule">
+          <div class="tabs" data-tabs>
+            <div class="tab-btns">
+              <button class="tab-btn active" data-tab="ts">Transaction Services</button>
+              <button class="tab-btn" data-tab="val">Valuation</button>
+              <button class="tab-btn" data-tab="forensic">Forensic</button>
+              <button class="tab-btn" data-tab="esg">ESG</button>
+              <button class="tab-btn" data-tab="ft">Finance Transformation</button>
+              <button class="tab-btn" data-tab="cf">Corporate Finance</button>
+              <button class="tab-btn" data-tab="cpi">CP&amp;I</button>
+              <button class="tab-btn" data-tab="tech">Technology</button>
+              <button class="tab-btn" data-tab="strat">Strategy&amp;</button>
+            </div>
+            <div class="tab-panel active" data-panel="ts"><ul class="clean"><li>Buy-side financial due diligence</li><li>Vendor due diligence / assistance</li><li>Transaction / SPA support</li><li>Leakage reviews</li><li>Completion accounts</li></ul></div>
+            <div class="tab-panel" data-panel="val"><ul class="clean"><li>Business / assets valuation</li><li>Valuation for financial and tax reporting</li><li>Valuation of financial instruments</li><li>Financial modelling</li><li>Actuarial services</li></ul></div>
+            <div class="tab-panel" data-panel="forensic"><ul class="clean"><li>Fraud investigations</li><li>Compliance / regulatory due diligence</li><li>Forensic data analytics &amp; mass screenings</li><li>Procurement audits</li><li>Dispute services</li><li>Anti-fraud, AML and sanctions compliance assessments</li><li>Business ethics and culture assessments</li></ul></div>
+            <div class="tab-panel" data-panel="esg"><ul class="clean"><li>ESG readiness / performance assessment</li><li>Strategy preparation</li><li>Ratings and benchmarking</li><li>Reporting and risk management</li><li>ESG / human rights due diligence</li><li>Climate strategy, sustainable finance and digital solutions</li></ul></div>
+            <div class="tab-panel" data-panel="ft"><ul class="clean"><li>KPI system design</li><li>Finance function automation</li><li>Cost management</li><li>Planning and budgeting</li><li>Management reporting</li><li>Process optimisation and investment planning</li></ul></div>
+            <div class="tab-panel" data-panel="cf"><ul class="clean"><li>Buy-side / sell-side M&amp;A</li><li>Debt and equity finance raising</li><li>Rating advisory</li></ul></div>
+            <div class="tab-panel" data-panel="cpi"><ul class="clean"><li>Economic analysis and modelling</li><li>Feasibility studies / business plans</li><li>PPP services</li><li>Investment analysis and fundraising support</li><li>Market research</li></ul></div>
+            <div class="tab-panel" data-panel="tech"><ul class="clean"><li>IT strategy</li><li>Infrastructure management consulting</li><li>IT assessment and system selection</li><li>SAP implementation</li><li>IT operating model</li><li>Data &amp; Analytics</li></ul></div>
+            <div class="tab-panel" data-panel="strat"><ul class="clean"><li>Corporate strategy / portfolio optimisation</li><li>Business model transformation</li><li>Market entry strategy</li><li>Market research and feasibility studies</li><li>PMO setup</li><li>Target operating models and performance improvement</li></ul></div>
+          </div>
+          <h2 style="margin-top:30px;">Priority industries</h2><hr class="rule">
+          <div class="chips">
+            <span class="chip">Technology &amp; Telecom</span><span class="chip">Energy &amp; Resources</span><span class="chip">Metals &amp; Mining</span>
+            <span class="chip">Transport &amp; Logistics</span><span class="chip">Agriculture</span><span class="chip">Financial Sector</span><span class="chip">Retail &amp; Consumer</span>
+          </div>
+        </div>
+        <div class="lang ru">
+          <span class="kicker">Кто мы</span>
+          <h1>Услуги</h1><hr class="rule">
+          <p>Advisory Eurasia состоит из двух направлений:</p>
+          <div class="grid c2">
+            <div class="card stripe"><h3>Deals (Сделки)</h3><p>Transaction Services (TS) · Corporate Finance (CF) · Forensic · Valuation · Capital Projects &amp; Infrastructure (CP&amp;I)</p></div>
+            <div class="card stripe pink"><h3>Consulting (Консалтинг)</h3><p>Strategy&amp; · Finance Transformation · ESG · Multi-industry &amp; Operations · Technology · Data &amp; Analytics (D&amp;A) · SAP ERP</p></div>
+          </div>
+          <h2 style="margin-top:30px;">Чем мы занимаемся — компетенции</h2><hr class="rule">
+          <div class="tabs" data-tabs>
+            <div class="tab-btns">
+              <button class="tab-btn active" data-tab="ts">Transaction Services</button>
+              <button class="tab-btn" data-tab="val">Valuation</button>
+              <button class="tab-btn" data-tab="forensic">Forensic</button>
+              <button class="tab-btn" data-tab="esg">ESG</button>
+              <button class="tab-btn" data-tab="ft">Finance Transformation</button>
+              <button class="tab-btn" data-tab="cf">Corporate Finance</button>
+              <button class="tab-btn" data-tab="cpi">CP&amp;I</button>
+              <button class="tab-btn" data-tab="tech">Technology</button>
+              <button class="tab-btn" data-tab="strat">Strategy&amp;</button>
+            </div>
+            <div class="tab-panel active" data-panel="ts"><ul class="clean"><li>Финансовый due diligence покупателя</li><li>Due diligence / содействие продавцу</li><li>Поддержка сделок / SPA</li><li>Проверка leakage</li><li>Completion accounts</li></ul></div>
+            <div class="tab-panel" data-panel="val"><ul class="clean"><li>Оценка бизнеса / активов</li><li>Оценка для финансовой и налоговой отчётности</li><li>Оценка финансовых инструментов</li><li>Финансовое моделирование</li><li>Актуарные услуги</li></ul></div>
+            <div class="tab-panel" data-panel="forensic"><ul class="clean"><li>Расследование мошенничества</li><li>Комплаенс / регуляторный due diligence</li><li>Форензик-аналитика и массовые проверки</li><li>Аудит закупок</li><li>Услуги по спорам</li><li>AML, антикоррупционные и санкционные проверки</li><li>Оценка деловой этики и культуры</li></ul></div>
+            <div class="tab-panel" data-panel="esg"><ul class="clean"><li>Оценка ESG-готовности и эффективности</li><li>Подготовка стратегии</li><li>Рейтинги и бенчмаркинг</li><li>Отчётность и управление рисками</li><li>ESG / due diligence по правам человека</li><li>Климатическая стратегия и устойчивое финансирование</li></ul></div>
+            <div class="tab-panel" data-panel="ft"><ul class="clean"><li>Разработка системы KPI</li><li>Автоматизация финансовой функции</li><li>Управление затратами</li><li>Планирование и бюджетирование</li><li>Управленческая отчётность</li><li>Оптимизация процессов и инвестиционное планирование</li></ul></div>
+            <div class="tab-panel" data-panel="cf"><ul class="clean"><li>M&amp;A со стороны покупателя / продавца</li><li>Привлечение долгового и акционерного финансирования</li><li>Консультации по рейтингам</li></ul></div>
+            <div class="tab-panel" data-panel="cpi"><ul class="clean"><li>Экономический анализ и моделирование</li><li>Технико-экономическое обоснование / бизнес-планы</li><li>Услуги ГЧП</li><li>Инвестиционный анализ и привлечение финансирования</li><li>Исследования рынка</li></ul></div>
+            <div class="tab-panel" data-panel="tech"><ul class="clean"><li>IT-стратегия</li><li>Консалтинг по управлению инфраструктурой</li><li>IT-оценка и выбор систем</li><li>Внедрение SAP</li><li>Операционная модель IT</li><li>Data &amp; Analytics</li></ul></div>
+            <div class="tab-panel" data-panel="strat"><ul class="clean"><li>Корпоративная стратегия / оптимизация портфеля</li><li>Трансформация бизнес-модели</li><li>Стратегия выхода на рынок</li><li>Исследования рынка и ТЭО</li><li>Организация PMO</li><li>Целевые операционные модели и повышение эффективности</li></ul></div>
+          </div>
+          <h2 style="margin-top:30px;">Приоритетные индустрии</h2><hr class="rule">
+          <div class="chips">
+            <span class="chip">Технологии и телеком</span><span class="chip">Энергетика и ресурсы</span><span class="chip">Металлургия и горная добыча</span>
+            <span class="chip">Транспорт и логистика</span><span class="chip">Сельское хозяйство</span><span class="chip">Финансовый сектор</span><span class="chip">Розничная торговля</span>
+          </div>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+      <!-- =================== TEAM =================== -->
+      <section class="page" id="team" data-group="Who we are" data-group-ru="Кто мы" data-nav="Team" data-nav-ru="Команда">
+        <div class="lang en">
+          <span class="kicker">Who we are</span>
+          <h1>Team</h1><hr class="rule">
+          <h2>Partners</h2><hr class="rule">
+          <div class="people-grid">
+            <div class="person"><img data-img="p_natalya"><div class="tag">Advisory Leader</div><div class="pname">Natalya Lim</div><div class="prole">Partner · Strategy&amp; and Advisory Leader, Eurasia</div></div>
+            <div class="person"><img data-img="p_arman"><div class="tag">Deals Leader</div><div class="pname">Arman Nurkin</div><div class="prole">Partner · Advisory Deals Leader, Eurasia</div></div>
+            <div class="person"><img data-img="p_vitaly"><div class="tag">Forensic Leader</div><div class="pname">Vitaly Falin</div><div class="prole">Partner · Advisory Forensic Leader, Eurasia</div></div>
+            <div class="person"><img data-img="p_bakhtiyar"><div class="tag">Consulting Leader</div><div class="pname">Bakhtiyar Bektursunov</div><div class="prole">Partner · Advisory Consulting Leader, Eurasia</div></div>
+          </div>
+          <h2 style="margin-top:30px;">Service line leaders</h2><hr class="rule">
+          <div class="people-grid">
+            <div class="person"><img data-img="l_farrid"><div class="tag">ESG</div><div class="pname">Farrid Gatal</div><div class="prole">Service Line Leader</div></div>
+            <div class="person"><img data-img="l_kirill"><div class="tag">Public Sector</div><div class="pname">Kirill Zharikov</div><div class="prole">Service Line Leader</div></div>
+            <div class="person"><img data-img="l_alisher"><div class="tag">Forensic</div><div class="pname">Alisher Onayev</div><div class="prole">Service Line Leader</div></div>
+            <div class="person"><img data-img="l_elena"><div class="tag">Valuation</div><div class="pname">Elena Egorova</div><div class="prole">Service Line Leader</div></div>
+            <div class="person"><img data-img="l_oybek"><div class="tag">Transaction Support</div><div class="pname">Oybek Yuldashev</div><div class="prole">Service Line Leader</div></div>
+            <div class="person"><img data-img="l_yermek"><div class="tag">Finance Transformation</div><div class="pname">Yermek Zhakeyev</div><div class="prole">Service Line Leader</div></div>
+            <div class="person"><img data-img="l_maximv"><div class="tag">D&amp;A</div><div class="pname">Maxim Vyatkin</div><div class="prole">Service Line Leader</div></div>
+            <div class="person"><img data-img="l_maximb"><div class="tag">CF / SAP / T&amp;Logistics</div><div class="pname">Maxim Baranov</div><div class="prole">Service Line Leader</div></div>
+          </div>
+          <h2 style="margin-top:30px;">Industry leaders</h2><hr class="rule">
+          <div class="people-grid">
+            <div class="person"><img data-img="i_asset"><div class="tag">Technology</div><div class="pname">Asset Kassymbalinov</div><div class="prole">Industry Leader</div></div>
+            <div class="person"><img data-img="i_zhanara"><div class="tag">Financial Sector</div><div class="pname">Zhanara Izimova</div><div class="prole">Industry Leader</div></div>
+            <div class="person"><img data-img="i_bakhtiyars"><div class="tag">Metals &amp; Mining / Energy</div><div class="pname">Bakhtiyar Sultan</div><div class="prole">Industry Leader</div></div>
+            <div class="person"><img data-img="i_askar"><div class="tag">Retail &amp; Consumer</div><div class="pname">Askar Kukeyev</div><div class="prole">Industry Leader</div></div>
+          </div>
+          <p style="font-size:var(--fs-sm);color:var(--grey1);margin-top:14px;">Photos in this section are placeholders — please replace with official portraits (see the A{} image map in the source code).</p>
+        </div>
+        <div class="lang ru">
+          <span class="kicker">Кто мы</span>
+          <h1>Команда</h1><hr class="rule">
+          <h2>Партнёры</h2><hr class="rule">
+          <div class="people-grid">
+            <div class="person"><img data-img="p_natalya"><div class="tag">Лидер Advisory</div><div class="pname">Наталья Лим</div><div class="prole">Партнёр · Лидер Strategy&amp; и Advisory, Евразия</div></div>
+            <div class="person"><img data-img="p_arman"><div class="tag">Лидер Deals</div><div class="pname">Арман Нуркин</div><div class="prole">Партнёр · Лидер Advisory Deals, Евразия</div></div>
+            <div class="person"><img data-img="p_vitaly"><div class="tag">Лидер Forensic</div><div class="pname">Виталий Фалин</div><div class="prole">Партнёр · Лидер Advisory Forensic, Евразия</div></div>
+            <div class="person"><img data-img="p_bakhtiyar"><div class="tag">Лидер Consulting</div><div class="pname">Бахтияр Бектурсунов</div><div class="prole">Партнёр · Лидер Advisory Consulting, Евразия</div></div>
+          </div>
+          <h2 style="margin-top:30px;">Лидеры сервисных линий</h2><hr class="rule">
+          <div class="people-grid">
+            <div class="person"><img data-img="l_farrid"><div class="tag">ESG</div><div class="pname">Фаррид Гатал</div><div class="prole">Лидер сервисной линии</div></div>
+            <div class="person"><img data-img="l_kirill"><div class="tag">Госсектор</div><div class="pname">Кирилл Жариков</div><div class="prole">Лидер сервисной линии</div></div>
+            <div class="person"><img data-img="l_alisher"><div class="tag">Forensic</div><div class="pname">Алишер Онаев</div><div class="prole">Лидер сервисной линии</div></div>
+            <div class="person"><img data-img="l_elena"><div class="tag">Valuation</div><div class="pname">Елена Егорова</div><div class="prole">Лидер сервисной линии</div></div>
+            <div class="person"><img data-img="l_oybek"><div class="tag">Transaction Support</div><div class="pname">Ойбек Юлдашев</div><div class="prole">Лидер сервисной линии</div></div>
+            <div class="person"><img data-img="l_yermek"><div class="tag">Finance Transformation</div><div class="pname">Ермек Жакеев</div><div class="prole">Лидер сервисной линии</div></div>
+            <div class="person"><img data-img="l_maximv"><div class="tag">D&amp;A</div><div class="pname">Максим Вяткин</div><div class="prole">Лидер сервисной линии</div></div>
+            <div class="person"><img data-img="l_maximb"><div class="tag">CF / SAP / Транспорт и логистика</div><div class="pname">Максим Баранов</div><div class="prole">Лидер сервисной линии</div></div>
+          </div>
+          <h2 style="margin-top:30px;">Индустриальные лидеры</h2><hr class="rule">
+          <div class="people-grid">
+            <div class="person"><img data-img="i_asset"><div class="tag">Технологии</div><div class="pname">Асет Касымбалинов</div><div class="prole">Индустриальный лидер</div></div>
+            <div class="person"><img data-img="i_zhanara"><div class="tag">Финансовый сектор</div><div class="pname">Жанара Изимова</div><div class="prole">Индустриальный лидер</div></div>
+            <div class="person"><img data-img="i_bakhtiyars"><div class="tag">Металлургия и добыча / энергетика</div><div class="pname">Бахтияр Султан</div><div class="prole">Индустриальный лидер</div></div>
+            <div class="person"><img data-img="i_askar"><div class="tag">Розничная торговля</div><div class="pname">Аскар Кукеев</div><div class="prole">Индустриальный лидер</div></div>
+          </div>
+          <p style="font-size:var(--fs-sm);color:var(--grey1);margin-top:14px;">Фотографии в этом разделе — плейсхолдеры, замените на официальные портреты (см. объект A{} в коде страницы).</p>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+      <!-- =================== ITIME =================== -->
+      <section class="page" id="itime" data-group="Admin Essentials" data-group-ru="Основы работы" data-nav="iPower (iTime)" data-nav-ru="iPower (iTime)">
+        <div class="lang en">
+          <span class="kicker">Admin essentials</span>
+          <h1>iPower (iTime)</h1><hr class="rule">
+          <p>iTime is the mandatory system used to track how your working time is spent. It underpins correct pay, accurate client billing and company compliance — so it matters from day one.</p>
+          <div class="callout"><strong>Start using iTime from your very first working day.</strong> Daily entry is strongly recommended — don't wait until the end of the week.</div>
+          <h2>What to record</h2><hr class="rule">
+          <ul class="clean"><li>Client work</li><li>Internal activities</li><li>Training and learning</li><li>Leave (if applicable)</li></ul>
+          <h2>How to log time</h2><hr class="rule">
+          <ol class="steps"><li>Select the correct engagement or activity code.</li><li>Enter the specific hours worked.</li><li>Submit the timesheet for approval.</li></ol>
+          <div class="grid c2">
+            <div class="card stripe"><h3>Common mistakes</h3><ul class="clean"><li>Forgetting to enter time</li><li>Using incorrect engagement/project codes</li><li>Late submission</li></ul></div>
+            <div class="card stripe pink"><h3>Who approves</h3><p>Your timesheets are approved by your Manager or Engagement Leader.</p></div>
+          </div>
+          <div class="callout warn"><strong>Consequences of non-compliance</strong>Late or inaccurate entries can delay payroll, distort revenue recognition and project margins, and delay client invoicing.</div>
+          <h2>Key takeaways</h2><hr class="rule">
+          <ul class="clean"><li>Use iTime from Day 1</li><li>Record time daily</li><li>Keep entries accurate and complete</li><li>Ask for help immediately if unsure</li></ul>
+          <h2>Contact</h2><hr class="rule">
+          <div class="contact-grid">
+            <div class="contact-card"><div class="name">Tomiris Korzhumbayeva</div><div class="role">Local IFS / HC support</div><a href="mailto:tomiris.korzhumbayeva@pwc.com">tomiris.korzhumbayeva@pwc.com</a></div>
+            <div class="contact-card"><div class="name">Your Team Leader / Engagement Manager</div><div class="role">First point of contact</div><p style="margin:0;font-size:var(--fs-body);">For day-to-day questions about codes and approvals.</p></div>
+          </div>
+        </div>
+        <div class="lang ru">
+          <span class="kicker">Основы работы</span>
+          <h1>iPower (iTime)</h1><hr class="rule">
+          <p>iTime — обязательная система учёта рабочего времени. От неё зависит правильность оплаты труда, точность выставления счетов клиентам и соблюдение внутренних требований — поэтому это важно с первого дня.</p>
+          <div class="callout"><strong>Начните использовать iTime с первого рабочего дня.</strong> Настоятельно рекомендуется вносить данные ежедневно — не откладывайте до конца недели.</div>
+          <h2>Что учитывать</h2><hr class="rule">
+          <ul class="clean"><li>Работу по проектам клиентов</li><li>Внутреннюю деятельность</li><li>Обучение и тренинги</li><li>Отсутствия (если применимо)</li></ul>
+          <h2>Как заносить время</h2><hr class="rule">
+          <ol class="steps"><li>Выберите правильный код проекта или активности.</li><li>Введите отработанные часы.</li><li>Отправьте табель на согласование.</li></ol>
+          <div class="grid c2">
+            <div class="card stripe"><h3>Частые ошибки</h3><ul class="clean"><li>Забыли внести время</li><li>Неверный код проекта/активности</li><li>Просроченная отправка</li></ul></div>
+            <div class="card stripe pink"><h3>Кто согласует</h3><p>Ваш табель согласует руководитель или менеджер проекта.</p></div>
+          </div>
+          <div class="callout warn"><strong>Последствия несоблюдения</strong>Просроченные или неточные записи задерживают расчёт зарплаты, искажают признание выручки и маржинальность проекта, задерживают выставление счетов клиенту.</div>
+          <h2>Главные выводы</h2><hr class="rule">
+          <ul class="clean"><li>Используйте iTime с первого дня</li><li>Вносите время ежедневно</li><li>Данные должны быть точными и полными</li><li>Сразу обращайтесь за помощью, если что-то неясно</li></ul>
+          <h2>Контакт</h2><hr class="rule">
+          <div class="contact-grid">
+            <div class="contact-card"><div class="name">Томирис Коржумбаева</div><div class="role">Поддержка Local IFS / HC</div><a href="mailto:tomiris.korzhumbayeva@pwc.com">tomiris.korzhumbayeva@pwc.com</a></div>
+            <div class="contact-card"><div class="name">Ваш руководитель / менеджер проекта</div><div class="role">Первая точка контакта</div><p style="margin:0;font-size:var(--fs-body);">По текущим вопросам о кодах и согласованиях.</p></div>
+          </div>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+      <!-- =================== TRAVEL =================== -->
+      <section class="page" id="travel" data-group="Admin Essentials" data-group-ru="Основы работы" data-nav="Travel" data-nav-ru="Командировки">
+        <div class="lang en">
+          <span class="kicker">Admin essentials</span>
+          <h1>Travel</h1><hr class="rule">
+          <p>All business travel is managed through the <strong>Syndatis</strong> system. Book at least <strong>14 days in advance</strong> — later bookings are flagged "Late Booking" and cost more.</p>
+          <div class="tabs" data-tabs>
+            <div class="accordion" data-accordion>
+              <div class="accordion-item"><div class="accordion-head"><h3>Flights — Global Air</h3><span class="accordion-toggle">+</span></div>
+                <div class="accordion-body"><p>Create a "New Travel Request" in Syndatis, send it to Global Air, receive options, enter the PNR into Syndatis, and submit for approval. You're responsible for tracking the status until ticket issuance.</p>
+                <p><strong>Fare rules:</strong> Partners/Directors book semi-flexible fares unless dates are fixed (lowest fare preferred). Staff book the lowest fare unless there is high uncertainty about dates (requires exceptional approval for semi-flexible).</p></div></div>
+              <div class="accordion-item"><div class="accordion-head"><h3>Hotels</h3><span class="accordion-toggle">+</span></div>
+                <div class="accordion-body"><p>Book via the Syndatis Travel Request — choose a hotel from the list or specify an out-of-list hotel, then wait for confirmation from the Travel Coordinator. Team travel requires a separate request per person.</p>
+                <p>Standard check-in is after 14:00, check-out before 12:00. Early check-in / late check-out may incur fees (Partners only), charged as an additional night.</p></div></div>
+              <div class="accordion-item"><div class="accordion-head"><h3>Cash advance and per diems</h3><span class="accordion-toggle">+</span></div>
+                <div class="accordion-body"><p>Submit a request in <strong>ServiceNow</strong> with estimated costs and Engagement Manager approval. This covers hotel, local transport and laundry — the firm pays for air/train tickets directly. Request per diems in ServiceNow once the Travel Request is approved. Keep all invoices, receipts and boarding passes for your Expense Report.</p></div></div>
+              <div class="accordion-item"><div class="accordion-head"><h3>Advance-only trips</h3><span class="accordion-toggle">+</span></div>
+                <div class="accordion-body"><p>If you don't need tickets or a hotel: select "New Travel Request" in Syndatis, tick "Meals/Per diems", enter the amount, put 0.00 for "Overall Cost" (Hotel), and explain the reason in "Description".</p></div></div>
+              <div class="accordion-item"><div class="accordion-head"><h3>MyTrips</h3><span class="accordion-toggle">+</span></div>
+                <div class="accordion-body"><p>Use of myTrips is mandatory for all CEE Partners and staff travelling outside their home territory, to assess immigration requirements. You'll receive an email for foreign trips; Managers and above may delegate to assistants.</p>
+                <div class="callout warn"><strong>Do not upload documents to myTrips</strong> — this triggers a $302 USD fee.</div></div></div>
+              <div class="accordion-item"><div class="accordion-head"><h3>Cancellations</h3><span class="accordion-toggle">+</span></div>
+                <div class="accordion-body"><p>Inform coordinators during working hours to avoid penalties. Changing a request in Syndatis does <strong>not</strong> automatically cancel bookings with Global Air, hotels or car services. On weekends, contact the hotel and Global Air directly. Failure to notify may result in fees charged to your personal account.</p></div></div>
+            </div>
+          </div>
+          <h2 style="margin-top:26px;">Contacts</h2><hr class="rule">
+          <div class="contact-grid">
+            <div class="contact-card"><div class="name">Malika Kunayeva</div><div class="role">Travel Coordinator</div><a href="mailto:malika.kunayeva@pwc.com">malika.kunayeva@pwc.com</a><p style="margin:4px 0 0;font-size:var(--fs-sm);">+7 701 500 96 81 · 09:00–18:00</p></div>
+            <div class="contact-card"><div class="name">Grigoriy Polevoy</div><div class="role">Global Air Manager</div><p style="margin:0;font-size:var(--fs-body);">+7 701 990 87 02</p></div>
+            <div class="contact-card"><div class="name">Saltanat Mashakova</div><div class="role">Finance — per diems</div><a href="mailto:saltanat.mashakova@pwc.com">saltanat.mashakova@pwc.com</a></div>
+            <div class="contact-card"><div class="name">Alexander Pakhomov</div><div class="role">Fleet Coordinator</div><p style="margin:0;font-size:var(--fs-body);">Ext. 4141 · +7 701 761 5048</p></div>
+          </div>
+        </div>
+        <div class="lang ru">
+          <span class="kicker">Основы работы</span>
+          <h1>Командировки</h1><hr class="rule">
+          <p>Все командировки оформляются через систему <strong>Syndatis</strong>. Бронируйте минимум за <strong>14 дней</strong> — более позднее бронирование помечается «Late Booking» и стоит дороже.</p>
+          <div class="tabs" data-tabs>
+            <div class="accordion" data-accordion>
+              <div class="accordion-item"><div class="accordion-head"><h3>Авиабилеты — Global Air</h3><span class="accordion-toggle">+</span></div>
+                <div class="accordion-body"><p>Создайте «New Travel Request» в Syndatis, отправьте его в Global Air, получите варианты, введите PNR в Syndatis и отправьте на согласование. Вы отвечаете за отслеживание статуса до выпуска билета.</p>
+                <p><strong>Правила тарифов:</strong> партнёры/директора бронируют полугибкие тарифы, если даты не фиксированы (предпочтение — самому дешёвому). Сотрудники бронируют самый дешёвый тариф, кроме случаев высокой неопределённости дат (требуется отдельное согласование полугибкого тарифа).</p></div></div>
+              <div class="accordion-item"><div class="accordion-head"><h3>Отели</h3><span class="accordion-toggle">+</span></div>
+                <div class="accordion-body"><p>Бронирование через Travel Request в Syndatis — выберите отель из списка или укажите отель не из списка, затем дождитесь подтверждения от координатора. Для группы нужна отдельная заявка на каждого человека.</p>
+                <p>Стандартное заселение — после 14:00, выезд — до 12:00. Раннее заселение/поздний выезд может облагаться платой (только для партнёров), рассчитываемой как дополнительная ночь.</p></div></div>
+              <div class="accordion-item"><div class="accordion-head"><h3>Аванс и суточные</h3><span class="accordion-toggle">+</span></div>
+                <div class="accordion-body"><p>Подайте заявку в <strong>ServiceNow</strong> с оценкой расходов и согласованием менеджера проекта. Это покрывает отель, местный транспорт и прачечную — авиа/железнодорожные билеты фирма оплачивает напрямую. Суточные запрашиваются в ServiceNow после согласования Travel Request. Сохраняйте все счета, чеки и посадочные талоны для авансового отчёта.</p></div></div>
+              <div class="accordion-item"><div class="accordion-head"><h3>Поездки только с авансом</h3><span class="accordion-toggle">+</span></div>
+                <div class="accordion-body"><p>Если билеты и отель не нужны: выберите «New Travel Request» в Syndatis, отметьте «Meals/Per diems», введите сумму, укажите 0.00 в «Overall Cost» (Hotel) и опишите причину в поле «Description».</p></div></div>
+              <div class="accordion-item"><div class="accordion-head"><h3>MyTrips</h3><span class="accordion-toggle">+</span></div>
+                <div class="accordion-body"><p>Использование myTrips обязательно для всех партнёров и сотрудников CEE, выезжающих за пределы своей страны, — для оценки миграционных требований. По зарубежным поездкам придёт письмо от системы; менеджеры и выше могут делегировать это ассистентам.</p>
+                <div class="callout warn"><strong>Не загружайте документы в myTrips</strong> — это приведёт к штрафу 302 USD.</div></div></div>
+              <div class="accordion-item"><div class="accordion-head"><h3>Отмена поездки</h3><span class="accordion-toggle">+</span></div>
+                <div class="accordion-body"><p>Сообщайте координаторам в рабочее время, чтобы избежать штрафов. Изменение заявки в Syndatis <strong>не</strong> отменяет автоматически бронирование в Global Air, отеле или автотранспорте. В выходные обращайтесь напрямую в отель и Global Air. Отсутствие уведомления может привести к штрафам на личный счёт.</p></div></div>
+            </div>
+          </div>
+          <h2 style="margin-top:26px;">Контакты</h2><hr class="rule">
+          <div class="contact-grid">
+            <div class="contact-card"><div class="name">Малика Кунаева</div><div class="role">Координатор путешествий</div><a href="mailto:malika.kunayeva@pwc.com">malika.kunayeva@pwc.com</a><p style="margin:4px 0 0;font-size:var(--fs-sm);">+7 701 500 96 81 · 09:00–18:00</p></div>
+            <div class="contact-card"><div class="name">Григорий Полевой</div><div class="role">Менеджер Global Air</div><p style="margin:0;font-size:var(--fs-body);">+7 701 990 87 02</p></div>
+            <div class="contact-card"><div class="name">Салтанат Машакова</div><div class="role">Финансы — суточные</div><a href="mailto:saltanat.mashakova@pwc.com">saltanat.mashakova@pwc.com</a></div>
+            <div class="contact-card"><div class="name">Александр Пахомов</div><div class="role">Координатор автопарка</div><p style="margin:0;font-size:var(--fs-body);">Доб. 4141 · +7 701 761 5048</p></div>
+          </div>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+      <!-- =================== SICKNESS =================== -->
+      <section class="page" id="sickness" data-group="Admin Essentials" data-group-ru="Основы работы" data-nav="Sickness" data-nav-ru="Больничный">
+        <div class="lang en">
+          <span class="kicker">Admin essentials</span>
+          <h1>Sickness</h1><hr class="rule">
+          <div class="grid c2">
+            <div class="stat"><div class="num">3</div><div class="label">Uncertified days / year max</div></div>
+            <div class="stat"><div class="num">10</div><div class="label">Total sick days / year max</div></div>
+          </div>
+          <h2 style="margin-top:26px;">Up to 1 day</h2><hr class="rule">
+          <p>You may take up to 1 day of sick leave without a medical certificate. Inform your Team Leader and the project manager you're working with immediately in the morning. Maximum <strong>3 uncertified days per calendar year</strong>.</p>
+          <h2>More than 1 day</h2><hr class="rule">
+          <p>A medical certificate is required if the absence lasts more than 1 day (even a few hours into the next day). Without a certificate, the employer will not pay from the 2nd day, and it is treated as an unexplained absence.</p>
+          <div class="callout"><strong>Annual maximum: 10 days</strong> (including the 3 uncertified days) per calendar year.</div>
+          <h2>How to file</h2><hr class="rule">
+          <ol class="steps"><li>Submit the request in Scala (create the form beforehand if the visit is planned).</li><li>Charge the time in iPower using code <strong>Sick Leave – 00100005</strong>.</li><li>No computer access due to sudden illness? Contact Ilmira Allahverdiyeva.</li></ol>
+          <h2>Contacts</h2><hr class="rule">
+          <div class="contact-grid">
+            <div class="contact-card"><div class="name">Ilmira Allahverdiyeva</div><div class="role">Administrative Assistant</div><p style="margin:0;font-size:var(--fs-body);">First point of contact for sick leave</p></div>
+            <div class="contact-card"><div class="name">Alina Umaraliyeva</div><div class="role">Scala main contact</div><a href="mailto:alina.umaraliyeva@pwc.com">alina.umaraliyeva@pwc.com</a></div>
+          </div>
+        </div>
+        <div class="lang ru">
+          <span class="kicker">Основы работы</span>
+          <h1>Больничный</h1><hr class="rule">
+          <div class="grid c2">
+            <div class="stat"><div class="num">3</div><div class="label">дня без справки / год макс</div></div>
+            <div class="stat"><div class="num">10</div><div class="label">всего дней больничного / год макс</div></div>
+          </div>
+          <h2 style="margin-top:26px;">До 1 дня</h2><hr class="rule">
+          <p>Вы можете взять до 1 дня больничного без медицинской справки. Сообщите своему руководителю и менеджеру проекта сразу утром. Максимум <strong>3 дня без справки за календарный год</strong>.</p>
+          <h2>Более 1 дня</h2><hr class="rule">
+          <p>Если отсутствие длится более 1 дня (даже несколько часов на следующий день), требуется медицинская справка. Без справки работодатель не оплачивает со 2-го дня, и это считается неявкой без объяснения причин.</p>
+          <div class="callout"><strong>Годовой максимум: 10 дней</strong> (включая 3 дня без справки) за календарный год.</div>
+          <h2>Как оформить</h2><hr class="rule">
+          <ol class="steps"><li>Подайте заявку в Scala (создайте форму заранее, если визит к врачу плановый).</li><li>Занесите время в iPower с кодом <strong>Sick Leave – 00100005</strong>.</li><li>Нет доступа к компьютеру из-за внезапной болезни? Свяжитесь с Ильмирой Аллахвердиевой.</li></ol>
+          <h2>Контакты</h2><hr class="rule">
+          <div class="contact-grid">
+            <div class="contact-card"><div class="name">Ильмира Аллахвердиева</div><div class="role">Административный ассистент</div><p style="margin:0;font-size:var(--fs-body);">Первая точка контакта по больничным</p></div>
+            <div class="contact-card"><div class="name">Алина Умаралиева</div><div class="role">Основной контакт по Scala</div><a href="mailto:alina.umaraliyeva@pwc.com">alina.umaraliyeva@pwc.com</a></div>
+          </div>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+      <!-- =================== LEAVE =================== -->
+      <section class="page" id="leave" data-group="Admin Essentials" data-group-ru="Основы работы" data-nav="Annual leave" data-nav-ru="Отпуск">
+        <div class="lang en">
+          <span class="kicker">Admin essentials</span>
+          <h1>Annual leave</h1><hr class="rule">
+          <p>All requests are submitted via <strong>ScalaHRM</strong>. You are responsible for booking or cancelling your own vacation in the system.</p>
+          <ol class="steps">
+            <li>Get approval from your Team Leader <strong>at least 2 weeks</strong> before the planned vacation.</li>
+            <li>Submit the request in ScalaHRM; primary approver is <strong>Ilmira Allahverdiyeva</strong>.</li>
+            <li>Submit a signed vacation order to HC no later than the <strong>20th of the month</strong>.</li>
+            <li>Fill in the timesheet code <strong>Annual Leave / Vacation 00100000</strong>.</li>
+          </ol>
+          <div class="callout"><strong>Vacation advance payment</strong> — available if your vacation is at least 2 weeks long and approved in ScalaHRM. Email your request at least 2 weeks before your vacation starts; Finance processes payment within 3 working days prior to the start.</div>
+          <h2>ScalaHRM</h2><hr class="rule">
+          <p>Install ScalaHRM via <strong>Workspace ONE Intelligent Hub</strong> — it will then appear on your desktop, giving access to HR self-service functions under "Личный кабинет".</p>
+          <h2>Other types of absence</h2><hr class="rule">
+          <div class="accordion" data-accordion>
+            <div class="accordion-item"><div class="accordion-head"><h3>TOIL (Time Off in Lieu)</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><p>For work during weekends and public holidays. Recommended to take within 2 months. Code <strong>Weekend Days (Day-Off) 00100000</strong>. Requires pre-approval from the Engagement Manager and Partner (client work) or LoS/HC Leader.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Unpaid leave</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><p>Subject to remaining annual entitlement and Partner approval. Code <strong>Unpaid Leave – Long Term 00100009</strong>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Social leave</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><p>3 days for the death of a close relative (mother, father, spouse, children, brother, sister). Paternity leave: 5 additional paid days within 3 months of birth/adoption. Code <strong>Special Leave – Social Leave 00100006</strong>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Study leave</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><p>For ACCA or other professional exams. Code <strong>Study Leave – 00100007</strong>.</p></div></div>
+          </div>
+          <h2 style="margin-top:26px;">Contacts</h2><hr class="rule">
+          <div class="contact-grid">
+            <div class="contact-card"><div class="name">Ilmira Allahverdiyeva</div><div class="role">Vacation approver / Admin Assistant</div></div>
+            <div class="contact-card"><div class="name">Alina Umaraliyeva</div><div class="role">Scala main contact</div><a href="mailto:alina.umaraliyeva@pwc.com">alina.umaraliyeva@pwc.com</a></div>
+          </div>
+        </div>
+        <div class="lang ru">
+          <span class="kicker">Основы работы</span>
+          <h1>Отпуск</h1><hr class="rule">
+          <p>Все заявки подаются через <strong>ScalaHRM</strong>. Вы самостоятельно отвечаете за оформление или отмену своего отпуска в системе.</p>
+          <ol class="steps">
+            <li>Получите согласование руководителя <strong>минимум за 2 недели</strong> до планируемого отпуска.</li>
+            <li>Подайте заявку в ScalaHRM; основной согласующий — <strong>Ильмира Аллахвердиева</strong>.</li>
+            <li>Подайте подписанный приказ на отпуск в HC не позднее <strong>20-го числа месяца</strong>.</li>
+            <li>Заполните табель кодом <strong>Annual Leave / Vacation 00100000</strong>.</li>
+          </ol>
+          <div class="callout"><strong>Аванс к отпуску</strong> — доступен, если отпуск длится не менее 2 недель и согласован в ScalaHRM. Отправьте запрос по электронной почте минимум за 2 недели до начала отпуска; финансовый отдел выплатит аванс в течение 3 рабочих дней до начала отпуска.</div>
+          <h2>ScalaHRM</h2><hr class="rule">
+          <p>Установите ScalaHRM через <strong>Workspace ONE Intelligent Hub</strong> — после этого приложение появится на рабочем столе и откроет доступ к HR-функциям самообслуживания в разделе «Личный кабинет».</p>
+          <h2>Другие виды отсутствия</h2><hr class="rule">
+          <div class="accordion" data-accordion>
+            <div class="accordion-item"><div class="accordion-head"><h3>TOIL (отгул)</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><p>За работу в выходные и праздничные дни. Рекомендуется использовать в течение 2 месяцев. Код <strong>Weekend Days (Day-Off) 00100000</strong>. Требуется предварительное согласование менеджера проекта и партнёра (для клиентской работы) или лидера LoS/HC.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Неоплачиваемый отпуск</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><p>При наличии остатка ежегодного отпуска и согласовании партнёра. Код <strong>Unpaid Leave – Long Term 00100009</strong>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Социальный отпуск</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><p>3 дня в связи со смертью близкого родственника (мать, отец, супруг(а), дети, брат, сестра). Отпуск по случаю рождения ребёнка: 5 дополнительных оплачиваемых дней в течение 3 месяцев после рождения/усыновления. Код <strong>Special Leave – Social Leave 00100006</strong>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Учебный отпуск</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><p>Для сдачи ACCA или других профессиональных экзаменов. Код <strong>Study Leave – 00100007</strong>.</p></div></div>
+          </div>
+          <h2 style="margin-top:26px;">Контакты</h2><hr class="rule">
+          <div class="contact-grid">
+            <div class="contact-card"><div class="name">Ильмира Аллахвердиева</div><div class="role">Согласующий отпуска / администратор</div></div>
+            <div class="contact-card"><div class="name">Алина Умаралиева</div><div class="role">Основной контакт по Scala</div><a href="mailto:alina.umaraliyeva@pwc.com">alina.umaraliyeva@pwc.com</a></div>
+          </div>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+      <!-- =================== DRESS CODE =================== -->
+      <section class="page" id="dresscode" data-group="Admin Essentials" data-group-ru="Основы работы" data-nav="Dress code" data-nav-ru="Дресс-код">
+        <div class="lang en">
+          <span class="kicker">Admin essentials</span>
+          <h1>Dress code</h1><hr class="rule">
+          <p>We follow either <strong>business</strong> or <strong>smart casual</strong> attire. Smart casual combines well-fitting, polished business wear with casual elements — blouses, polo shirts, button-downs, chinos, dress pants, dark-wash jeans, and polished practical footwear.</p>
+          <div class="figures-row">
+            <div class="figure-card"><img data-img="dc_business"><div class="cap">Business</div></div>
+            <div class="figure-card"><img data-img="dc_smart"><div class="cap">Smart casual</div></div>
+            <div class="figure-card"><img data-img="dc_notok"><div class="cap">Not acceptable</div></div>
+          </div>
+          <div class="doDont">
+            <div class="doBox"><h4>Acceptable</h4><ul><li>Blouses, shirts, jackets, polos, sweaters, basic T-shirts</li><li>Classic trousers, classic jeans, chinos</li><li>Loafers, ballet shoes, medium/kitten heels, brogues, monk shoes, Chelsea boots, sneakers</li></ul></div>
+            <div class="dontBox"><h4>Not acceptable</h4><ul><li>Shorts, sportswear, extremely casual clothes, see-through clothing, skinny pants, leggings</li><li>Exposed belly, shoulders, back, bare neckline; crop tops</li><li>Open footwear</li><li>Skirts/dresses shorter than 10 cm above the knee</li></ul></div>
+          </div>
+          <h2>Remote work &amp; video calls</h2><hr class="rule">
+          <p>On video calls, keep the "portrait zone" professional.</p>
+          <div class="doDont">
+            <div class="doBox"><h4>Do</h4><ul><li>Blouses, shirts, jackets, polos, sweaters, basic T-shirts</li><li>Neat hairstyle</li></ul></div>
+            <div class="dontBox"><h4>Don't</h4><ul><li>Pyjamas, hoodies, creased clothing</li><li>Excessive colours, prints or large logos</li></ul></div>
+          </div>
+          <div class="callout"><strong>Client meetings</strong> always require business attire — hoodies are explicitly not acceptable for client meetings.</div>
+          <div class="callout warn"><strong>Consequences of non-compliance</strong> HR or a Team Leader may ask you to align your appearance with the standard, including being sent home to change — at your own expense (no taxi reimbursement), with the time deducted from vacation. Repeated or serious violations may trigger formal disciplinary action affecting your performance rating.</div>
+        </div>
+        <div class="lang ru">
+          <span class="kicker">Основы работы</span>
+          <h1>Дресс-код</h1><hr class="rule">
+          <p>Мы придерживаемся стиля <strong>business</strong> или <strong>smart casual</strong>. Smart casual сочетает аккуратную деловую одежду с элементами кэжуал — блузы, поло, рубашки, чиносы, классические брюки, тёмные джинсы и аккуратная практичная обувь.</p>
+          <div class="figures-row">
+            <div class="figure-card"><img data-img="dc_business"><div class="cap">Business</div></div>
+            <div class="figure-card"><img data-img="dc_smart"><div class="cap">Smart casual</div></div>
+            <div class="figure-card"><img data-img="dc_notok"><div class="cap">Недопустимо</div></div>
+          </div>
+          <div class="doDont">
+            <div class="doBox"><h4>Допустимо</h4><ul><li>Блузы, рубашки, пиджаки, поло, свитеры, базовые футболки</li><li>Классические брюки, классические джинсы, чиносы</li><li>Лоферы, балетки, каблук средней высоты, броги, монки, челси, кроссовки</li></ul></div>
+            <div class="dontBox"><h4>Недопустимо</h4><ul><li>Шорты, спортивная одежда, слишком повседневная одежда, прозрачная одежда, узкие брюки, леггинсы</li><li>Открытый живот, плечи, спина, глубокое декольте; топы с открытым животом</li><li>Открытая обувь</li><li>Юбки/платья короче 10 см выше колена</li></ul></div>
+          </div>
+          <h2>Удалённая работа и видеозвонки</h2><hr class="rule">
+          <p>На видеозвонках важно выглядеть профессионально в «зоне портрета».</p>
+          <div class="doDont">
+            <div class="doBox"><h4>Можно</h4><ul><li>Блузы, рубашки, пиджаки, поло, свитеры, базовые футболки</li><li>Аккуратная причёска</li></ul></div>
+            <div class="dontBox"><h4>Нельзя</h4><ul><li>Пижамы, худи, мятая одежда</li><li>Избыток цвета, принтов или крупные логотипы</li></ul></div>
+          </div>
+          <div class="callout"><strong>Встречи с клиентами</strong> всегда требуют деловой одежды — худи прямо отмечены как недопустимые для встреч с клиентами.</div>
+          <div class="callout warn"><strong>Последствия несоблюдения</strong> HR или руководитель может попросить привести внешний вид в соответствие со стандартом, включая отправку домой для смены одежды — за свой счёт (такси не компенсируется), а затраченное время вычитается из отпуска. Повторные или серьёзные нарушения могут повлечь дисциплинарные меры, влияющие на оценку эффективности.</div>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+      <!-- =================== WELLBEING 1 =================== -->
+      <section class="page" id="wellbeing1" data-group="Wellbeing" data-group-ru="Благополучие" data-nav="Be well, work well" data-nav-ru="Энергия и устойчивость">
+        <div class="lang en">
+          <span class="kicker">Wellbeing</span>
+          <h1>Be well, work well</h1><hr class="rule">
+          <p>"We Care" is one of our five values. To deliver quality work, we need healthy, energised teams able to navigate business intensity — resilience is about renewing and managing energy, not simply working harder for longer.</p>
+          <h2>Four energy dimensions</h2><hr class="rule">
+          <div class="grid c4">
+            <div class="card stripe"><h3>Physical</h3><p>Sleep, nutrition, activity.</p></div>
+            <div class="card stripe pink"><h3>Emotional</h3><p>Managing the voice in our head; fuelling positives.</p></div>
+            <div class="card stripe yellow"><h3>Mental</h3><p>The ability to direct attention effectively.</p></div>
+            <div class="card stripe red"><h3>Spiritual</h3><p>Understanding the "why" behind our actions.</p></div>
+          </div>
+          <h2 style="margin-top:26px;">Sources of energy</h2><hr class="rule">
+          <div class="accordion" data-accordion>
+            <div class="accordion-item"><div class="accordion-head"><h3>Physical habits</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><ul class="clean"><li>7–8 hours of quality sleep</li><li>Drink water</li><li>Short walks between meetings</li><li>Stretch 2–3 minutes every hour</li><li>Breathing exercises</li><li>Take lunch away from your desk</li><li>Reduce sugar and caffeine</li></ul></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Emotional habits</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><ul class="clean"><li>Challenge negative self-talk</li><li>Practise gratitude — write 3 good things daily</li><li>Celebrate small wins</li><li>Show appreciation</li><li>Spend time with positive people</li><li>Ask for support</li><li>Focus on what you can control</li></ul></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Mental habits</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><ul class="clean"><li>Turn off unnecessary notifications</li><li>Avoid multitasking</li><li>Prioritise the most important task</li><li>Schedule focus time</li><li>Take recovery breaks</li><li>Limit information overload</li><li>Learn new things</li></ul></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Spiritual habits</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><ul class="clean"><li>Connect work to a bigger purpose</li><li>Reflect on personal values</li><li>Spend time on meaningful activities</li><li>Help others without expectation</li><li>Volunteer</li><li>Practise mindfulness or reflection</li></ul></div></div>
+          </div>
+          <h2 style="margin-top:26px;">5 simple habits that we promote in PwC</h2><hr class="rule">
+          <ul class="clean">
+            <li><strong>50 minutes is the new hour</strong> — schedule meetings for 25 or 50 minutes to leave room for breaks and prep.</li>
+            <li><strong>No video days</strong> — agree on one no-video day (or half-day) per week.</li>
+            <li><strong>Pause before you send</strong> — use "Schedule Send" for non-urgent messages outside office hours.</li>
+            <li><strong>Walk and talk</strong> — consider walking meetings to boost oxygen flow and avoid multitasking.</li>
+            <li><strong>Breaks matter</strong> — schedule short breaks to refresh and stay productive.</li>
+          </ul>
+        </div>
+        <div class="lang ru">
+          <span class="kicker">Благополучие</span>
+          <h1>Энергия и устойчивость</h1><hr class="rule">
+          <p>«We Care» — одна из наших пяти ценностей. Чтобы делать качественную работу, нам нужны здоровые и энергичные команды, способные справляться с высокой интенсивностью бизнеса — устойчивость — это про восполнение и управление энергией, а не про то, чтобы просто работать больше и дольше.</p>
+          <h2>Четыре измерения энергии</h2><hr class="rule">
+          <div class="grid c4">
+            <div class="card stripe"><h3>Физическое</h3><p>Сон, питание, активность.</p></div>
+            <div class="card stripe pink"><h3>Эмоциональное</h3><p>Управление «внутренним голосом»; фокус на позитиве.</p></div>
+            <div class="card stripe yellow"><h3>Умственное</h3><p>Способность эффективно направлять внимание.</p></div>
+            <div class="card stripe red"><h3>Духовное</h3><p>Понимание «зачем» за нашими действиями.</p></div>
+          </div>
+          <h2 style="margin-top:26px;">Источники энергии</h2><hr class="rule">
+          <div class="accordion" data-accordion>
+            <div class="accordion-item"><div class="accordion-head"><h3>Физические привычки</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><ul class="clean"><li>7–8 часов качественного сна</li><li>Пейте воду</li><li>Короткие прогулки между встречами</li><li>Растяжка 2–3 минуты каждый час</li><li>Дыхательные упражнения</li><li>Обед вне рабочего места</li><li>Меньше сахара и кофеина</li></ul></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Эмоциональные привычки</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><ul class="clean"><li>Оспаривайте негативный внутренний диалог</li><li>Практикуйте благодарность — записывайте 3 хороших момента в день</li><li>Отмечайте маленькие победы</li><li>Проявляйте признательность</li><li>Проводите время с позитивными людьми</li><li>Просите поддержки</li><li>Фокусируйтесь на том, что можете контролировать</li></ul></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Умственные привычки</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><ul class="clean"><li>Отключайте ненужные уведомления</li><li>Избегайте многозадачности</li><li>Приоритизируйте самую важную задачу</li><li>Планируйте время для концентрации</li><li>Делайте восстанавливающие перерывы</li><li>Ограничивайте информационную перегрузку</li><li>Изучайте новое</li></ul></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Духовные привычки</h3><span class="accordion-toggle">+</span></div>
+              <div class="accordion-body"><ul class="clean"><li>Связывайте работу с более широкой целью</li><li>Размышляйте о личных ценностях</li><li>Уделяйте время значимым занятиям</li><li>Помогайте другим без ожиданий</li><li>Волонтёрство</li><li>Практикуйте осознанность или рефлексию</li></ul></div></div>
+          </div>
+          <h2 style="margin-top:26px;">5 простых привычек, которые продвигает PwC</h2><hr class="rule">
+          <ul class="clean">
+            <li><strong>50 минут — новый час</strong> — планируйте встречи на 25 или 50 минут, чтобы оставить время на перерыв и подготовку.</li>
+            <li><strong>Дни без видео</strong> — договоритесь об одном дне (или половине дня) в неделю без видеосвязи.</li>
+            <li><strong>Пауза перед отправкой</strong> — используйте «Отложенную отправку» для несрочных писем вне рабочих часов.</li>
+            <li><strong>Прогулка и разговор</strong> — рассмотрите встречи на ходу для притока кислорода и отказа от многозадачности.</li>
+            <li><strong>Перерывы важны</strong> — планируйте короткие перерывы, чтобы восстановиться и оставаться продуктивным.</li>
+          </ul>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+      <!-- =================== WELLBEING 2 =================== -->
+      <section class="page" id="wellbeing2" data-group="Wellbeing" data-group-ru="Благополучие" data-nav="Support & resources" data-nav-ru="Поддержка и ресурсы">
+        <div class="lang en">
+          <span class="kicker">Wellbeing</span>
+          <h1>Support &amp; resources</h1><hr class="rule">
+          <div class="card stripe" style="margin-bottom:22px;">
+            <h3>Empatia platform</h3>
+            <p>A confidential external platform offering free consultations with psychologists, coaches and healthy-lifestyle experts — on stress, burnout, relationships, effectiveness, goal setting, nutrition, sleep and immunity.</p>
+            <div class="stat" style="display:inline-block;margin:10px 0;"><div class="num">50</div><div class="label">Free consultations / year</div></div>
+            <h4 style="margin:10px 0 6px;font-family:var(--sans);font-size:var(--fs-body);font-weight:bold;">How to register</h4>
+            <ol class="steps"><li>Open the Empatia platform link.</li><li>Use your Employee ID (from Workday) as the promo code.</li><li>Book your consultation.</li></ol>
+          </div>
+          <h2>Other support formats</h2><hr class="rule">
+          <div class="grid c3">
+            <div class="card"><h3>Development</h3><p>Webinars on mental health, acting and painting classes.</p></div>
+            <div class="card"><h3>Physical &amp; social</h3><p>Yoga, fruit days, company dinners at peak times, volleyball and football, outdoor fitness, massage chairs.</p></div>
+            <div class="card"><h3>Community</h3><p>CSR activities, mindfulness and gratitude practice, PwC Club, Buddy programme, summer camp.</p></div>
+          </div>
+          <h2 style="margin-top:26px;">Financial wellbeing</h2><hr class="rule">
+          <ul class="clean"><li>Flexible working arrangements (especially for parents)</li><li>Annual salary increases and performance-based bonuses</li><li>Health check-ups</li><li>Financing for professional and personal development</li></ul>
+          <h2 style="margin-top:26px;">Contacts</h2><hr class="rule">
+          <div class="contact-grid">
+            <div class="contact-card"><div class="name">Aigerim Seitkali / Ayaulym Zhailaubayeva</div><div class="role">Empatia platform &amp; acting classes</div><a href="mailto:aigerim.seitkali@pwc.com">aigerim.seitkali@pwc.com</a></div>
+            <div class="contact-card"><div class="name">Sofiya Sherimova</div><div class="role">Buddy programme &amp; summer camp</div><a href="mailto:sofiya.sherimova@pwc.com">sofiya.sherimova@pwc.com</a></div>
+            <div class="contact-card"><div class="name">Marina Karpova</div><div class="role">CSR</div><a href="mailto:marina.karpova@pwc.com">marina.karpova@pwc.com</a></div>
+            <div class="contact-card"><div class="name">Olzhas Ratbek</div><div class="role">Volleyball training</div><a href="mailto:olzhas.ratbek@pwc.com">olzhas.ratbek@pwc.com</a></div>
+            <div class="contact-card"><div class="name">Technical support</div><div class="role">Empatia platform issues</div><a href="mailto:hi@ponimau.com">hi@ponimau.com</a></div>
+          </div>
+        </div>
+        <div class="lang ru">
+          <span class="kicker">Благополучие</span>
+          <h1>Поддержка и ресурсы</h1><hr class="rule">
+          <div class="card stripe" style="margin-bottom:22px;">
+            <h3>Платформа Empatia</h3>
+            <p>Конфиденциальная внешняя платформа с бесплатными консультациями психологов, коучей и экспертов по здоровому образу жизни — по стрессу, выгоранию, отношениям, эффективности, постановке целей, питанию, сну и иммунитету.</p>
+            <div class="stat" style="display:inline-block;margin:10px 0;"><div class="num">50</div><div class="label">Бесплатных консультаций / год</div></div>
+            <h4 style="margin:10px 0 6px;font-family:var(--sans);font-size:var(--fs-body);font-weight:bold;">Как зарегистрироваться</h4>
+            <ol class="steps"><li>Перейдите по ссылке на платформу Empatia.</li><li>Используйте свой Employee ID (из Workday) как промокод.</li><li>Забронируйте консультацию.</li></ol>
+          </div>
+          <h2>Другие форматы поддержки</h2><hr class="rule">
+          <div class="grid c3">
+            <div class="card"><h3>Развитие</h3><p>Вебинары о психическом здоровье, актёрское мастерство и живопись.</p></div>
+            <div class="card"><h3>Физическое и социальное</h3><p>Йога, фруктовые дни, корпоративные обеды в пиковые периоды, волейбол и футбол, фитнес на открытом воздухе, массажные кресла.</p></div>
+            <div class="card"><h3>Сообщество</h3><p>КСО-активности, практика осознанности и благодарности, PwC Club, бадди-программа, летний лагерь.</p></div>
+          </div>
+          <h2 style="margin-top:26px;">Финансовое благополучие</h2><hr class="rule">
+          <ul class="clean"><li>Гибкий график работы (особенно для родителей)</li><li>Ежегодное повышение зарплаты и премии по результатам работы</li><li>Медицинские осмотры</li><li>Финансирование профессионального и личного развития</li></ul>
+          <h2 style="margin-top:26px;">Контакты</h2><hr class="rule">
+          <div class="contact-grid">
+            <div class="contact-card"><div class="name">Айгерим Сейткали / Аяулым Жайлаубаева</div><div class="role">Платформа Empatia и актёрские классы</div><a href="mailto:aigerim.seitkali@pwc.com">aigerim.seitkali@pwc.com</a></div>
+            <div class="contact-card"><div class="name">Софья Шеримова</div><div class="role">Бадди-программа и летний лагерь</div><a href="mailto:sofiya.sherimova@pwc.com">sofiya.sherimova@pwc.com</a></div>
+            <div class="contact-card"><div class="name">Марина Карпова</div><div class="role">КСО</div><a href="mailto:marina.karpova@pwc.com">marina.karpova@pwc.com</a></div>
+            <div class="contact-card"><div class="name">Олжас Ратбек</div><div class="role">Тренировки по волейболу</div><a href="mailto:olzhas.ratbek@pwc.com">olzhas.ratbek@pwc.com</a></div>
+            <div class="contact-card"><div class="name">Техническая поддержка</div><div class="role">Вопросы по платформе Empatia</div><a href="mailto:hi@ponimau.com">hi@ponimau.com</a></div>
+          </div>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+      <!-- =================== FAQ =================== -->
+      <section class="page" id="faq" data-group="" data-group-ru="" data-nav="FAQ" data-nav-ru="Вопросы и ответы">
+        <div class="lang en">
+          <span class="kicker">FAQ</span>
+          <h1>Frequently asked questions</h1><hr class="rule">
+          <div class="accordion" data-accordion>
+            <div class="accordion-item"><div class="accordion-head"><h3>When should I start logging time in iTime?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>From your very first working day. Daily entry is strongly recommended — see <a data-goto="itime">iPower (iTime)</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Who approves my timesheet?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Your Manager or Engagement Leader — see <a data-goto="itime">iPower (iTime)</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>How far in advance should I book a business trip?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>At least 14 days in advance via Syndatis — see <a data-goto="travel">Travel</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>How do I request a cash advance for a trip?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Submit a request in ServiceNow with Engagement Manager approval — see <a data-goto="travel">Travel</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Do I need a medical certificate for sick leave?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Not for a single day (max 3 uncertified days/year), but required for anything longer — see <a data-goto="sickness">Sickness</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>How do I book annual leave?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Via ScalaHRM, with Team Leader approval at least 2 weeks in advance — see <a data-goto="leave">Annual leave</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Can I get an advance payment before my vacation?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Yes, for vacations of 2+ weeks approved in ScalaHRM — request at least 2 weeks ahead. See <a data-goto="leave">Annual leave</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>What should I wear on client calls?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Business attire is required for all client meetings — see <a data-goto="dresscode">Dress code</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>How do I install ScalaHRM?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Via Workspace ONE Intelligent Hub — see <a data-goto="leave">Annual leave</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Where can I get confidential wellbeing support?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>The Empatia platform offers up to 50 free confidential consultations a year — see <a data-goto="wellbeing2">Support &amp; resources</a>.</p></div></div>
+          </div>
+          <div class="callout" style="margin-top:26px;"><strong>Didn't find your answer?</strong> Ask your Team Leader, Buddy, or use the search bar above — it searches this entire guide.</div>
+        </div>
+        <div class="lang ru">
+          <span class="kicker">Вопросы и ответы</span>
+          <h1>Часто задаваемые вопросы</h1><hr class="rule">
+          <div class="accordion" data-accordion>
+            <div class="accordion-item"><div class="accordion-head"><h3>Когда начинать вести учёт времени в iTime?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>С первого рабочего дня. Настоятельно рекомендуется вносить данные ежедневно — см. <a data-goto="itime">iPower (iTime)</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Кто согласует мой табель?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Ваш руководитель или менеджер проекта — см. <a data-goto="itime">iPower (iTime)</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>За сколько нужно бронировать командировку?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Минимум за 14 дней через Syndatis — см. <a data-goto="travel">Командировки</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Как запросить аванс на командировку?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Подайте заявку в ServiceNow с согласованием менеджера проекта — см. <a data-goto="travel">Командировки</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Нужна ли справка для больничного?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Не нужна для 1 дня (максимум 3 дня без справки в год), но обязательна при более длительном отсутствии — см. <a data-goto="sickness">Больничный</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Как оформить ежегодный отпуск?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Через ScalaHRM, с согласованием руководителя минимум за 2 недели — см. <a data-goto="leave">Отпуск</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Можно ли получить аванс перед отпуском?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Да, для отпуска от 2 недель, согласованного в ScalaHRM — запрос минимум за 2 недели. См. <a data-goto="leave">Отпуск</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Что надеть на звонок с клиентом?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Для всех встреч с клиентами обязателен деловой стиль — см. <a data-goto="dresscode">Дресс-код</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Как установить ScalaHRM?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Через Workspace ONE Intelligent Hub — см. <a data-goto="leave">Отпуск</a>.</p></div></div>
+            <div class="accordion-item"><div class="accordion-head"><h3>Где получить конфиденциальную поддержку по благополучию?</h3><span class="accordion-toggle">+</span></div><div class="accordion-body"><p>Платформа Empatia предлагает до 50 бесплатных конфиденциальных консультаций в год — см. <a data-goto="wellbeing2">Поддержка и ресурсы</a>.</p></div></div>
+          </div>
+          <div class="callout" style="margin-top:26px;"><strong>Не нашли ответ?</strong> Спросите руководителя, бадди, или используйте поиск выше — он ищет по всему гиду.</div>
+        </div>
+        <div class="pagenav"></div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   IMAGE MAP — replace placeholder generator calls below with
+   real base64 strings ("data:image/jpeg;base64,....") to use
+   actual photography. Each key is referenced once, no matter
+   how many times it appears across EN/RU markup.
+   ========================================================= */
+function svgAvatar(initials, c1, c2){
+  var s = '<svg xmlns="http://www.w3.org/2000/svg" width="300" height="400">'
+    + '<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">'
+    + '<stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient></defs>'
+    + '<rect width="300" height="400" fill="url(#g)"/>'
+    + '<text x="150" y="225" font-family="Georgia,serif" font-size="96" fill="#fff" text-anchor="middle">'+initials+'</text>'
+    + '</svg>';
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(s);
+}
+function svgFigure(label, color){
+  var s = '<svg xmlns="http://www.w3.org/2000/svg" width="200" height="260">'
+    + '<rect width="200" height="260" fill="#FBF3EE"/>'
+    + '<circle cx="100" cy="60" r="30" fill="'+color+'"/>'
+    + '<rect x="60" y="95" width="80" height="120" rx="8" fill="'+color+'" opacity="0.85"/>'
+    + '<rect x="70" y="215" width="26" height="40" fill="'+color+'" opacity="0.6"/>'
+    + '<rect x="104" y="215" width="26" height="40" fill="'+color+'" opacity="0.6"/>'
+    + '</svg>';
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(s);
+}
+function svgMap(){
+  var s = '<svg xmlns="http://www.w3.org/2000/svg" width="900" height="360">'
+    + '<rect width="900" height="360" fill="#FBF3EE"/>'
+    + '<text x="450" y="40" font-family="Georgia,serif" font-size="20" fill="#7D7D7D" text-anchor="middle">Eurasia region (schematic)</text>'
+    + [['Kazakhstan',330,160],['Uzbekistan',260,230],['Azerbaijan',150,240],['Georgia',110,190],
+       ['Mongolia',560,140],['Armenia',120,260],['Turkmenistan',260,280],['Kyrgyzstan',380,240]]
+       .map(function(c,i){
+         var active=i<6;
+         return '<circle cx="'+c[1]+'" cy="'+c[2]+'" r="10" fill="'+(active?'#D04A02':'#DEDEDE')+'"/>' +
+                '<text x="'+c[1]+'" y="'+(c[2]-16)+'" font-family="Arial" font-size="13" fill="'+(active?'#2D2D2D':'#7D7D7D')+'" text-anchor="middle">'+c[0]+'</text>';
+       }).join('')
+    + '</svg>';
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(s);
+}
+var A = {
+  map: svgMap(),
+  p_natalya: svgAvatar('NL','#D04A02','#EB8C00'),
+  p_arman: svgAvatar('AN','#EB8C00','#FFB600'),
+  p_vitaly: svgAvatar('VF','#DB536A','#D04A02'),
+  p_bakhtiyar: svgAvatar('BB','#E0301E','#EB8C00'),
+  l_farrid: svgAvatar('FG','#D04A02','#DB536A'),
+  l_kirill: svgAvatar('KZ','#EB8C00','#D04A02'),
+  l_alisher: svgAvatar('AO','#DB536A','#EB8C00'),
+  l_elena: svgAvatar('EE','#FFB600','#D04A02'),
+  l_oybek: svgAvatar('OY','#D04A02','#FFB600'),
+  l_yermek: svgAvatar('YZ','#EB8C00','#DB536A'),
+  l_maximv: svgAvatar('MV','#DB536A','#FFB600'),
+  l_maximb: svgAvatar('MB','#D04A02','#EB8C00'),
+  i_asset: svgAvatar('AK','#EB8C00','#D04A02'),
+  i_zhanara: svgAvatar('ZI','#DB536A','#EB8C00'),
+  i_bakhtiyars: svgAvatar('BS','#FFB600','#DB536A'),
+  i_askar: svgAvatar('AK','#D04A02','#DB536A'),
+  dc_business: svgFigure('Business','#2D2D2D'),
+  dc_smart: svgFigure('Smart casual','#D04A02'),
+  dc_notok: svgFigure('Not acceptable','#E0301E')
+};
+
+/* ---------- apply images ---------- */
+document.querySelectorAll('img[data-img]').forEach(function(img){
+  var key = img.getAttribute('data-img');
+  if(A[key]) img.src = A[key];
+});
+
+/* ---------- language ---------- */
+var htmlEl = document.documentElement;
+function setLang(lang){
+  htmlEl.setAttribute('data-lang', lang);
+  document.getElementById('btnEN').classList.toggle('active', lang==='en');
+  document.getElementById('btnRU').classList.toggle('active', lang==='ru');
+  document.getElementById('searchInput').placeholder = lang==='en' ? 'Search the guide…' : 'Поиск по гиду…';
+  buildMenu();
+  buildPagenav();
+  buildSearchIndex();
+  closeSearch();
+}
+document.getElementById('btnEN').addEventListener('click', function(){ setLang('en'); });
+document.getElementById('btnRU').addEventListener('click', function(){ setLang('ru'); });
+
+/* ---------- pages / navigation ---------- */
+var pages = Array.prototype.slice.call(document.querySelectorAll('.page'));
+var currentId = pages.length ? pages[0].id : null;
+
+function lang(){ return htmlEl.getAttribute('data-lang'); }
+function navLabel(p){ return lang()==='en' ? p.getAttribute('data-nav') : p.getAttribute('data-nav-ru'); }
+function groupLabel(p){ return lang()==='en' ? p.getAttribute('data-group') : p.getAttribute('data-group-ru'); }
+
+function showPage(id){
+  pages.forEach(function(p){ p.classList.toggle('active', p.id===id); });
+  currentId = id;
+  buildMenu();
+  var sidebar = document.getElementById('sidebar');
+  sidebar.classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function buildMenu(){
+  var menu = document.getElementById('menu');
+  menu.innerHTML = '';
+  var lastGroup = null;
+  pages.forEach(function(p){
+    var g = groupLabel(p);
+    if(g){
+      if(g !== lastGroup){
+        var gt = document.createElement('div');
+        gt.className = 'menu-group-title';
+        gt.textContent = g;
+        menu.appendChild(gt);
+        lastGroup = g;
+      }
+      var item = document.createElement('div');
+      item.className = 'menu-item' + (p.id===currentId ? ' active':'');
+      item.textContent = navLabel(p);
+      item.addEventListener('click', function(){ showPage(p.id); });
+      menu.appendChild(item);
+    } else {
+      lastGroup = null;
+      var item2 = document.createElement('div');
+      item2.className = 'menu-item top' + (p.id===currentId ? ' active':'');
+      item2.textContent = navLabel(p);
+      item2.addEventListener('click', function(){ showPage(p.id); });
+      menu.appendChild(item2);
+    }
+  });
+}
+
+function buildPagenav(){
+  pages.forEach(function(p, idx){
+    var nav = p.querySelector('.pagenav');
+    nav.innerHTML = '';
+    var prev = pages[idx-1];
+    var next = pages[idx+1];
+    var prevLabel = lang()==='en' ? 'Back' : 'Назад';
+    var nextLabel = lang()==='en' ? 'Next' : 'Далее';
+    if(prev){
+      var a1 = document.createElement('a');
+      a1.innerHTML = '<span class="arrow">← '+prevLabel+'</span>' + navLabel(prev);
+      a1.addEventListener('click', function(){ showPage(prev.id); });
+      nav.appendChild(a1);
+    } else { nav.appendChild(document.createElement('span')); }
+    if(next){
+      var a2 = document.createElement('a');
+      a2.className = 'next';
+      a2.innerHTML = '<span class="arrow">'+nextLabel+' →</span>' + navLabel(next);
+      a2.addEventListener('click', function(){ showPage(next.id); });
+      nav.appendChild(a2);
+    }
+  });
+}
+
+/* data-goto links (inline text links to other pages) */
+document.addEventListener('click', function(e){
+  var t = e.target.closest('[data-goto]');
+  if(t){
+    e.preventDefault();
+    showPage(t.getAttribute('data-goto'));
+  }
+});
+
+/* ---------- tabs ---------- */
+document.querySelectorAll('[data-tabs]').forEach(function(tabs){
+  var btns = tabs.querySelectorAll(':scope > .tab-btns > .tab-btn');
+  if(!btns.length) return;
+  btns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var key = btn.getAttribute('data-tab');
+      tabs.querySelectorAll(':scope > .tab-btns > .tab-btn').forEach(function(b){ b.classList.toggle('active', b===btn); });
+      tabs.querySelectorAll(':scope > .tab-panel').forEach(function(pnl){ pnl.classList.toggle('active', pnl.getAttribute('data-panel')===key); });
+    });
+  });
+});
+
+/* ---------- accordions ---------- */
+document.addEventListener('click', function(e){
+  var head = e.target.closest('.accordion-head');
+  if(head){
+    var item = head.closest('.accordion-item');
+    item.classList.toggle('open');
+  }
+});
+
+/* ---------- mobile menu ---------- */
+document.getElementById('hamburger').addEventListener('click', function(){
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('show');
+});
+document.getElementById('overlay').addEventListener('click', function(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+});
+
+/* ---------- search ---------- */
+var searchIndex = [];
+function buildSearchIndex(){
+  searchIndex = [];
+  pages.forEach(function(p){
+    var clone = p.cloneNode(true);
+    var other = lang()==='en' ? 'ru' : 'en';
+    clone.querySelectorAll('.lang.'+other).forEach(function(el){ el.remove(); });
+    var text = clone.textContent.replace(/\s+/g,' ').trim();
+    searchIndex.push({ id: p.id, group: groupLabel(p) || '', title: navLabel(p), text: text });
+  });
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+var searchInput = document.getElementById('searchInput');
+var searchResults = document.getElementById('searchResults');
+
+searchInput.addEventListener('input', function(){
+  var q = searchInput.value.trim();
+  if(q.length < 2){ closeSearch(); return; }
+  var qLower = q.toLowerCase();
+  var matches = searchIndex.filter(function(item){ return item.text.toLowerCase().indexOf(qLower) !== -1; });
+  renderResults(matches, q);
+});
+
+function renderResults(matches, q){
+  searchResults.innerHTML = '';
+  if(!matches.length){
+    var empty = document.createElement('div');
+    empty.className = 'search-empty';
+    empty.textContent = lang()==='en' ? 'No results found.' : 'Ничего не найдено.';
+    searchResults.appendChild(empty);
+    searchResults.classList.add('show');
+    return;
+  }
+  var qLower = q.toLowerCase();
+  matches.slice(0,10).forEach(function(m){
+    var idx = m.text.toLowerCase().indexOf(qLower);
+    var start = Math.max(0, idx-50);
+    var end = Math.min(m.text.length, idx+q.length+70);
+    var snippetRaw = (start>0?'…':'') + m.text.substring(start,end) + (end<m.text.length?'…':'');
+    var snippetEsc = escapeHtml(snippetRaw);
+    var re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');
+    var snippetHi = snippetEsc.replace(re, '<mark>$1</mark>');
+    var row = document.createElement('div');
+    row.className = 'search-result-item';
+    row.innerHTML = '<div class="meta">'+escapeHtml(m.group ? m.group+' · '+m.title : m.title)+'</div><div class="snippet">'+snippetHi+'</div>';
+    row.addEventListener('click', function(){
+      showPage(m.id);
+      closeSearch();
+      searchInput.value = '';
+      setTimeout(function(){ highlightAndReveal(m.id, q); }, 60);
+    });
+    searchResults.appendChild(row);
+  });
+  searchResults.classList.add('show');
+}
+
+function closeSearch(){
+  searchResults.classList.remove('show');
+  searchResults.innerHTML = '';
+}
+
+document.addEventListener('click', function(e){
+  if(!e.target.closest('.search-wrap')) closeSearch();
+});
+
+function highlightAndReveal(pageId, q){
+  var page = document.getElementById(pageId);
+  if(!page) return;
+  page.querySelectorAll('mark.hit').forEach(function(m){
+    var parent = m.parentNode;
+    parent.replaceChild(document.createTextNode(m.textContent), m);
+    parent.normalize();
+  });
+  var activeLangEl = page.querySelectorAll('.lang.'+lang());
+  var re = new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig');
+  var firstMark = null;
+
+  activeLangEl.forEach(function(container){
+    var walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, null, false);
+    var textNodes = [];
+    var node;
+    while(node = walker.nextNode()){
+      if(node.nodeValue && re.test(node.nodeValue)) textNodes.push(node);
+      re.lastIndex = 0;
+    }
+    textNodes.forEach(function(tn){
+      var parts = tn.nodeValue.split(re);
+      if(parts.length <= 1) return;
+      var frag = document.createDocumentFragment();
+      parts.forEach(function(part, i){
+        if(i % 2 === 1){
+          var mark = document.createElement('mark');
+          mark.className = 'hit';
+          mark.textContent = part;
+          frag.appendChild(mark);
+          if(!firstMark) firstMark = mark;
+        } else if(part){
+          frag.appendChild(document.createTextNode(part));
+        }
+      });
+      tn.parentNode.replaceChild(frag, tn);
+    });
+  });
+
+  if(firstMark){
+    var accItem = firstMark.closest ? firstMark.closest('.accordion-item') : null;
+    if(accItem) accItem.classList.add('open');
+    var tabPanel = firstMark.closest ? firstMark.closest('.tab-panel') : null;
+    if(tabPanel){
+      var tabsWrap = tabPanel.closest('[data-tabs]');
+      var key = tabPanel.getAttribute('data-panel');
+      if(tabsWrap){
+        tabsWrap.querySelectorAll(':scope > .tab-btns > .tab-btn').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-tab')===key); });
+        tabsWrap.querySelectorAll(':scope > .tab-panel').forEach(function(pnl){ pnl.classList.toggle('active', pnl===tabPanel); });
+      }
+    }
+    firstMark.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+/* ---------- init ---------- */
+showPage(currentId);
+setLang('en');
+</script>
+</body>
+</html>
